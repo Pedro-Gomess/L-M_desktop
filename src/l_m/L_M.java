@@ -16,6 +16,10 @@ public class L_M {
     public static void main(String[] args) {
         // TODO code application logic here
         
+        Login hm = new Login();
+        
+        hm.setVisible(true);
+        
     }
     
 }
