@@ -16,9 +16,9 @@ public class L_M {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        Login hm = new Login();
+        RecuperacaoSenha req = new RecuperacaoSenha();
         
-        hm.setVisible(true);
+        req.setVisible(true);
         
     }
     
