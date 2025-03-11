@@ -15,11 +15,6 @@ public class L_M {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        
-        RecuperacaoSenha req = new RecuperacaoSenha();
-        
-        req.setVisible(true);
-        
     }
     
 }

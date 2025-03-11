@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package l_m;
-
 import javax.swing.ImageIcon;
 import java.sql.ResultSet;
 import java.sql.Connection;
@@ -12,10 +11,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
-
 /**
  *
- * @author Luis53889806
+ * @author Pedro53722376
  */
 public class Login extends javax.swing.JFrame {
 
@@ -24,7 +22,6 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
-        
         imagemFundo1.setImg(new ImageIcon(getClass().getResource("/imgs/background.png")));
     }
 
@@ -37,8 +34,6 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jDesktopPane1 = new javax.swing.JDesktopPane();
         imagemFundo1 = new imagemfundo.ImagemFundo();
         jPanel1 = new javax.swing.JPanel();
         matriculaTxt = new javax.swing.JTextField();
@@ -50,8 +45,6 @@ public class Login extends javax.swing.JFrame {
         EntrarBt = new javax.swing.JLabel();
         senhaTxt = new javax.swing.JPasswordField();
         jLabel3 = new javax.swing.JLabel();
-
-        jCheckBox1.setText("jCheckBox1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -175,28 +168,15 @@ public class Login extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jDesktopPane1.setLayer(imagemFundo1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
-        jDesktopPane1.setLayout(jDesktopPane1Layout);
-        jDesktopPane1Layout.setHorizontalGroup(
-            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(imagemFundo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jDesktopPane1Layout.setVerticalGroup(
-            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(imagemFundo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopPane1)
+            .addComponent(imagemFundo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopPane1)
+            .addComponent(imagemFundo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -205,16 +185,34 @@ public class Login extends javax.swing.JFrame {
     private void matriculaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matriculaTxtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_matriculaTxtActionPerformed
-    // Botao para entrar na conta
+
     private void EntrarBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EntrarBtMouseClicked
-        if(matriculaTxt.getText().equals("") || !senhaTxt.getText().equals("")){
+        if(matriculaTxt.getText().equals("") || senhaTxt.getText().equals("")){
+            JOptionPane.showMessageDialog(null,"Os campos não podem estar vazios!");
             return;
         }
-        
+
         try{
-            Connection con = DataBaseConnection().con
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT a.id_administrador, a.matricula, p.senha FROM administrador a JOIN pessoa p on p.id_pessoa = a.id_pessoa\n" +
+            "WHERE a.matricula = '"+matriculaTxt.getText()+"' AND p.senha = '"+senhaTxt.getText()+"';";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()){
+                Home home = new Home();
+                home.setVisible(true);
+                return;
+            }
+
+            JOptionPane.showMessageDialog(null, "Confira se seus dados foram escritos corretamente!");
+
+            rs.close();
+            con.close();
+            stmt.close();
+        }catch(SQLException ex){
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }//GEN-LAST:event_EntrarBtMouseClicked
 
     /**
@@ -255,8 +253,6 @@ public class Login extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel EntrarBt;
     private imagemfundo.ImagemFundo imagemFundo1;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
