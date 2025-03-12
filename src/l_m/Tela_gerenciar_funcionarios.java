@@ -17,8 +17,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     public static String funcaoMatricula(String matricula){
-        double num = Math.round(Math.random() * 1000 * 1000 );
-        matricula = String.valueOf(matricula+num);
+        float num = Math.round(Math.random() * 1000 * 1000);
+        int randomNum = (int)num;
+        matricula = String.valueOf(matricula+randomNum);
         return matricula;
     }
     /**
@@ -28,7 +29,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         initComponents();
         //impede que o usuario mova colunas nas tabelas
         tabelaFunc.getTableHeader().setReorderingAllowed(false);
-        // Exibe os itens do BD assim que se inicia a tela 
+        //Exibe os itens do BD assim que se inicia a tela 
         try {
             DefaultTableModel modelo = (DefaultTableModel) tabelaFunc.getModel();
             Connection con = DataBaseConnection.conexaoBanco();
@@ -39,16 +40,13 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             while(rs.next()){
                 Object[] dados = {rs.getString("nome"), rs.getString("matricula")};
                 modelo.addRow(dados);
-                JOptionPane.showMessageDialog(null, funcaoMatricula("ADM"));
             }
-            
-                
             
             rs.close();
             con.close();
             stmt.close();
-        } catch (SQLException e) {
-              Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
+        }catch (SQLException e) {
+            Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
         }
         
     }
@@ -83,6 +81,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaFunc = new javax.swing.JTable();
         pesquisaTxt = new javax.swing.JTextField();
+        search = new javax.swing.JLabel();
 
         setClosable(true);
         setIconifiable(true);
@@ -91,6 +90,11 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
 
         refreshBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/refresh.png"))); // NOI18N
         refreshBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        refreshBt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                refreshBtMouseClicked(evt);
+            }
+        });
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -132,7 +136,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         jLabel4.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
         jLabel4.setText("CPF:");
 
-        comboCargo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Funcionário" }));
+        comboCargo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Funcionario" }));
         comboCargo.setBorder(null);
         comboCargo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
@@ -149,6 +153,11 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
 
         editBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/edit.png"))); // NOI18N
         editBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        editBt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                editBtMouseClicked(evt);
+            }
+        });
 
         deleteBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/delete.png"))); // NOI18N
         deleteBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -156,7 +165,6 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         jLabel3.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
         jLabel3.setText("Email:");
 
-        emailTxt.setEditable(false);
         emailTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
         emailTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         emailTxt.addActionListener(new java.awt.event.ActionListener() {
@@ -191,7 +199,6 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                         .addGap(15, 15, 15)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(nomeTxt)
-                            .addComponent(emailTxt, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(130, 130, 130)
                                 .addComponent(jLabel8))
@@ -205,7 +212,8 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                                 .addComponent(editBt)
                                 .addGap(78, 78, 78)
                                 .addComponent(deleteBt)
-                                .addGap(36, 36, 36))))
+                                .addGap(36, 36, 36))
+                            .addComponent(emailTxt)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(143, 143, 143)
                         .addComponent(jLabel3)))
@@ -224,9 +232,9 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                 .addComponent(nomeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(14, 14, 14)
                 .addComponent(emailTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cpfTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -268,6 +276,11 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        tabelaFunc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaFuncMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabelaFunc);
 
         pesquisaTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
@@ -278,20 +291,32 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             }
         });
 
+        search.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/searchIcon.png"))); // NOI18N
+        search.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        search.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                searchMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 252, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 300, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(pesquisaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(71, 71, 71)
+                        .addGap(18, 18, 18)
+                        .addComponent(search)
+                        .addGap(18, 18, 18)
                         .addComponent(refreshBt)
-                        .addGap(20, 20, 20))))
+                        .addGap(20, 20, 20))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -300,7 +325,8 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pesquisaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(refreshBt))
+                    .addComponent(refreshBt)
+                    .addComponent(search))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1))
         );
@@ -309,21 +335,16 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1200, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 30, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 31, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 7, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 700, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -332,10 +353,6 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     private void nomeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nomeTxtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_nomeTxtActionPerformed
-
-    private void emailTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_emailTxtActionPerformed
 
     private void senhaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_senhaTxtActionPerformed
         // TODO add your handling code here:
@@ -350,12 +367,106 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_pesquisaTxtActionPerformed
 
     private void addBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addBtMouseClicked
-     /*   try{
+        try{
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "INSERT INTO pessoa(nome, email, ")";
+            String sql = "INSERT INTO pessoa(nome, email, cpf, senha) VALUES(?,?,?,?)";
             PreparedStatement stmt = con.prepareStatement(sql);
-        }catch(){}*/
+            
+            stmt.setString(1,nomeTxt.getText());
+            stmt.setString(2,emailTxt.getText());
+            stmt.setString(3,cpfTxt.getText());
+            stmt.setString(4,senhaTxt.getText());
+            stmt.execute();
+        //verificação para conferir o cargo do cadastrado
+            String argFuncao = "FUNC";
+            if(comboCargo.getSelectedItem().equals("Administrador")){argFuncao = "ADM";}
+            sql = "INSERT INTO "+comboCargo.getSelectedItem()+"(matricula, id_pessoa) VALUES('"+funcaoMatricula(argFuncao)+"',"
+/*add o id_pessoa à tabela*/+ " (SELECT id_pessoa FROM pessoa ORDER BY id_pessoa DESC LIMIT 1));";
+            stmt = con.prepareStatement(sql);
+            JOptionPane.showMessageDialog(null,"cadastrado concluido");
+            stmt.execute();
+            stmt.close();
+            con.close();
+        }catch(SQLException ex){
+             Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_addBtMouseClicked
+    //botão refresh 
+    private void refreshBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshBtMouseClicked
+          // Exibe os itens do BD assim que se inicia a tela 
+        try {
+            DefaultTableModel modelo = (DefaultTableModel) tabelaFunc.getModel();
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT p.nome, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa;";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                Object[] dados = {rs.getString("nome"), rs.getString("matricula")};
+                modelo.addRow(dados);
+            }
+            
+            rs.close();
+            con.close();
+            stmt.close();
+        }catch (SQLException e) {
+            Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }//GEN-LAST:event_refreshBtMouseClicked
+
+    private void searchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchMouseClicked
+         try {
+            DefaultTableModel modelo = (DefaultTableModel) tabelaFunc.getModel();
+            modelo.setNumRows(0);
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT p.nome, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE nome LIKE '%"+search.getText()+"%';";
+            PreparedStatement stmt = con.prepareStatement(sql);
+          
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                Object[] dados = {rs.getString("nome"), rs.getString("matricula")};
+                modelo.addRow(dados);
+            }
+            
+            rs.close();
+            con.close();
+            stmt.close();
+            
+        }catch (SQLException e) {
+            Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }//GEN-LAST:event_searchMouseClicked
+
+    private void emailTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_emailTxtActionPerformed
+
+    private void editBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editBtMouseClicked
+        
+    }//GEN-LAST:event_editBtMouseClicked
+
+    private void tabelaFuncMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaFuncMouseClicked
+        String funcSelecionado = tabelaFunc.getValueAt(tabelaFunc.getSelectedRow(), 1).toString();
+        try {
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT p.nome, p.email, p.cpf, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+funcSelecionado+"';";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                nomeTxt.setText(rs.getString("nome"));
+                emailTxt.setText(rs.getString("email"));
+                cpfTxt.setText(rs.getString("cpf"));
+            }
+            
+            rs.close();
+            con.close();
+            stmt.close();
+        }catch (SQLException e) {
+            Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }//GEN-LAST:event_tabelaFuncMouseClicked
 
    
     
@@ -380,6 +491,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     private javax.swing.JTextField nomeTxt;
     private javax.swing.JTextField pesquisaTxt;
     private javax.swing.JLabel refreshBt;
+    private javax.swing.JLabel search;
     private javax.swing.JTextField senhaTxt;
     private javax.swing.JTable tabelaFunc;
     // End of variables declaration//GEN-END:variables
