@@ -36,7 +36,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             String sql = "SELECT p.nome, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa;";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
-            
+          
             while(rs.next()){
                 Object[] dados = {rs.getString("nome"), rs.getString("matricula")};
                 modelo.addRow(dados);
@@ -48,7 +48,6 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         }catch (SQLException e) {
             Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
         }
-        
     }
 
     /**
@@ -161,6 +160,11 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
 
         deleteBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/delete.png"))); // NOI18N
         deleteBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        deleteBt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                deleteBtMouseClicked(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
         jLabel3.setText("Email:");
@@ -396,6 +400,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
           // Exibe os itens do BD assim que se inicia a tela 
         try {
             DefaultTableModel modelo = (DefaultTableModel) tabelaFunc.getModel();
+            modelo.setNumRows(0);
             Connection con = DataBaseConnection.conexaoBanco();
             String sql = "SELECT p.nome, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa;";
             PreparedStatement stmt = con.prepareStatement(sql);
@@ -443,11 +448,52 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_emailTxtActionPerformed
 
     private void editBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editBtMouseClicked
-        
+        String matriculaFunc = tabelaFunc.getValueAt(tabelaFunc.getSelectedRow(), 1).toString(); 
+        if(matriculaFunc.equals("")){
+            JOptionPane.showMessageDialog(null, "Selecione um funcionario na tabela!");
+            return;
+        }
+        try {
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT p.id_pessoa, p.nome, p.email, p.cpf, f.matricula FROM pessoa p  JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE '"+matriculaFunc+"';";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            String idPessoa = "";
+            while(rs.next()){
+                idPessoa = rs.getString("id_pessoa");
+                nomeTxt.setText(rs.getString("nome"));
+                emailTxt.setText(rs.getString("email"));
+                cpfTxt.setText(rs.getString("cpf"));
+            }
+            
+            
+            if(nomeTxt.getText().isBlank() || emailTxt.getText().isBlank() || cpfTxt.getText().isBlank()){
+                JOptionPane.showMessageDialog(null, "Preencha os campos com atenção");
+                return;
+            }
+            sql = "UPDATE pessoa SET nome = ?, email = ?, cpf = ? WHERE id_pessoa = ?;";
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, nomeTxt.getText());           
+            stmt.setString(2, emailTxt.getText());
+            stmt.setString(3, cpfTxt.getText());
+            stmt.setString(4, idPessoa);
+            stmt.execute();
+            
+            JOptionPane.showMessageDialog(null,"Funcionario atualizado com sucesso");
+            
+            rs.close();
+            con.close();
+            stmt.close();
+        }catch (SQLException e) {
+            Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
+        }
     }//GEN-LAST:event_editBtMouseClicked
 
     private void tabelaFuncMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaFuncMouseClicked
         String funcSelecionado = tabelaFunc.getValueAt(tabelaFunc.getSelectedRow(), 1).toString();
+        senhaTxt.setVisible(false);
+        jLabel8.setVisible(false);
+        comboCargo.setSelectedItem("Funcionario");
         try {
             Connection con = DataBaseConnection.conexaoBanco();
             String sql = "SELECT p.nome, p.email, p.cpf, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+funcSelecionado+"';";
@@ -467,6 +513,46 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
         }
     }//GEN-LAST:event_tabelaFuncMouseClicked
+//BOTAO DELETE
+    private void deleteBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteBtMouseClicked
+       //PEGA O FUNCIONARIO SELECONADO E VERIFICA SE FOI CORRETAMENTE SELECIONADO 
+        String matriculaFunc = tabelaFunc.getValueAt(tabelaFunc.getSelectedRow(), 1).toString(); 
+        if(matriculaFunc.equals("")){
+            JOptionPane.showMessageDialog(null, "Selecione um funcionario na tabela!");
+            return;
+        }
+        try {
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT p.id_pessoa, p.nome, p.email, p.cpf, f.matricula FROM pessoa p  JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE '"+matriculaFunc+"';";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            //pega ID do funcionario
+            String idPessoa = "";
+            while(rs.next()){
+                idPessoa = rs.getString("id_pessoa");
+                nomeTxt.setText(rs.getString("nome"));
+                emailTxt.setText(rs.getString("email"));
+                cpfTxt.setText(rs.getString("cpf"));
+            }
+            //verificacao para inputs vazios
+            if(nomeTxt.getText().isBlank() || emailTxt.getText().isBlank() || cpfTxt.getText().isBlank()){
+                JOptionPane.showMessageDialog(null, "Preencha os campos com atenção");
+                return;
+            }
+            //botao delete
+            sql = "DELETE FROM pessoa WHERE id_pessoa = '"+idPessoa+"';";
+            stmt = con.prepareStatement(sql);
+            stmt.execute();
+            
+            JOptionPane.showMessageDialog(null,"Funcionario atualizado com sucesso");
+            
+            rs.close();
+            con.close();
+            stmt.close();
+        }catch (SQLException e) {
+            Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }//GEN-LAST:event_deleteBtMouseClicked
 
    
     
