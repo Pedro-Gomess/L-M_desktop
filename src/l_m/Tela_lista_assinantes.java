@@ -4,17 +4,27 @@
  */
 package l_m;
 
+import javax.swing.ImageIcon;
+import java.sql.ResultSet;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Pedro53722376
  */
 public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
-
+    
     /**
      * Creates new form Tela_lista_assinantes
      */
     public Tela_lista_assinantes() {
         initComponents();
+        .getTableHeader().setReorderingAllowed(false);
+
     }
 
     /**
@@ -75,16 +85,17 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
         imagemFundo1Layout.setHorizontalGroup(
             imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(imagemFundo1Layout.createSequentialGroup()
+                .addGap(395, 395, 395)
+                .addComponent(matriculaTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel11)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(imagemFundo1Layout.createSequentialGroup()
                 .addGroup(imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(imagemFundo1Layout.createSequentialGroup()
-                        .addGap(395, 395, 395)
-                        .addComponent(matriculaTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel11))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1202, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(imagemFundo1Layout.createSequentialGroup()
                         .addGap(495, 495, 495)
-                        .addComponent(jLabel2))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1202, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel2)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         imagemFundo1Layout.setVerticalGroup(

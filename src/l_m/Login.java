@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  * @author Pedro53722376
  */
 public class Login extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form Login
      */
@@ -195,8 +195,11 @@ public class Login extends javax.swing.JFrame {
         try{
             Connection con = DataBaseConnection.conexaoBanco();
             String sql = "SELECT a.id_administrador, a.matricula, p.senha FROM administrador a JOIN pessoa p on p.id_pessoa = a.id_pessoa\n" +
-            "WHERE a.matricula = '"+matriculaTxt.getText()+"' AND p.senha = '"+senhaTxt.getText()+"';";
+            "WHERE a.matricula = ? AND p.senha = ?;";
             PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, matriculaTxt.getText());
+            stmt.setString(2, senhaTxt.getText());
+           
             ResultSet rs = stmt.executeQuery();
 
             if(rs.next()){
@@ -205,7 +208,7 @@ public class Login extends javax.swing.JFrame {
                 return;
             }
 
-            JOptionPane.showMessageDialog(null, "Confira se seus dados foram escritos corretamente!");
+            JOptionPane.showMessageDialog(null, "Administrador não encontrado!");
 
             rs.close();
             con.close();

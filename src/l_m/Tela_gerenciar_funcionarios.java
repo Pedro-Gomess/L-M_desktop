@@ -38,7 +38,16 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             ResultSet rs = stmt.executeQuery();
           
             while(rs.next()){
-                Object[] dados = {rs.getString("nome"), rs.getString("matricula")};
+                Object[] dados = {rs.getString("nome"), rs.getString("matricula"), "Funcionário"};
+                modelo.addRow(dados);
+            }
+            
+            sql = "SELECT p.nome, a.matricula FROM pessoa p INNER JOIN administrador a ON p.id_pessoa = a.id_pessoa;";
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+             
+            while(rs.next()){
+                Object[] dados = {rs.getString("nome"), rs.getString("matricula"), "Administrador"};
                 modelo.addRow(dados);
             }
             
@@ -59,6 +68,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel5 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         refreshBt = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -81,6 +91,9 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         tabelaFunc = new javax.swing.JTable();
         pesquisaTxt = new javax.swing.JTextField();
         search = new javax.swing.JLabel();
+        idPessoalbl = new javax.swing.JLabel();
+
+        jLabel5.setText("jLabel5");
 
         setClosable(true);
         setIconifiable(true);
@@ -135,7 +148,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         jLabel4.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
         jLabel4.setText("CPF:");
 
-        comboCargo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Funcionario" }));
+        comboCargo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Funcionário" }));
         comboCargo.setBorder(null);
         comboCargo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
@@ -269,11 +282,11 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Matrícula", "Nome"
+                "Matrícula", "Nome", "cargo"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -303,22 +316,27 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             }
         });
 
+        idPessoalbl.setToolTipText("");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 300, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 343, Short.MAX_VALUE)
                         .addComponent(pesquisaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(search)
                         .addGap(18, 18, 18)
                         .addComponent(refreshBt)
                         .addGap(20, 20, 20))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(61, 61, 61)
+                        .addComponent(idPessoalbl)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
@@ -333,6 +351,10 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                     .addComponent(search))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(idPessoalbl)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -381,14 +403,26 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             stmt.setString(3,cpfTxt.getText());
             stmt.setString(4,senhaTxt.getText());
             stmt.execute();
-        //verificação para conferir o cargo do cadastrado
+        //verificação para conferir o cargo do cadastrado e paar qual tabela o usuario vai ser inserido
             String argFuncao = "FUNC";
-            if(comboCargo.getSelectedItem().equals("Administrador")){argFuncao = "ADM";}
-            sql = "INSERT INTO "+comboCargo.getSelectedItem()+"(matricula, id_pessoa) VALUES('"+funcaoMatricula(argFuncao)+"',"
-/*add o id_pessoa à tabela*/+ " (SELECT id_pessoa FROM pessoa ORDER BY id_pessoa DESC LIMIT 1));";
+            switch (comboCargo.getSelectedItem().toString()) {
+                case "Administrador":
+                    argFuncao = "ADM";
+                    sql = "INSERT INTO administrador (matricula, id_pessoa) VALUES('"+funcaoMatricula(argFuncao)+"', (SELECT id_pessoa FROM pessoa ORDER BY id_pessoa DESC LIMIT 1));";
+                    break;
+                case "Funcionário":
+                    sql = "INSERT INTO funcionario (matricula, id_pessoa) VALUES('"+funcaoMatricula(argFuncao)+"', (SELECT id_pessoa FROM pessoa ORDER BY id_pessoa DESC LIMIT 1));";
+                    break;
+                default:
+                    throw new AssertionError();
+            }
             stmt = con.prepareStatement(sql);
-            JOptionPane.showMessageDialog(null,"cadastrado concluido");
             stmt.execute();
+            JOptionPane.showMessageDialog(null,"cadastrado concluido");
+                        
+            nomeTxt.setText(null);
+            emailTxt.setText(null);
+            cpfTxt.setText(null);
             stmt.close();
             con.close();
         }catch(SQLException ex){
@@ -407,7 +441,16 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()){
-                Object[] dados = {rs.getString("nome"), rs.getString("matricula")};
+                Object[] dados = {rs.getString("nome"), rs.getString("matricula"), "Funcionário"};
+                modelo.addRow(dados);
+            }
+            
+            sql = "SELECT p.nome, a.matricula FROM pessoa p INNER JOIN administrador a ON p.id_pessoa = a.id_pessoa;";
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+             
+            while(rs.next()){
+                Object[] dados = {rs.getString("nome"), rs.getString("matricula"), "Administrador"};
                 modelo.addRow(dados);
             }
             
@@ -424,13 +467,23 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             DefaultTableModel modelo = (DefaultTableModel) tabelaFunc.getModel();
             modelo.setNumRows(0);
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.nome, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE nome LIKE '%"+search.getText()+"%';";
+            String sql = "SELECT p.nome, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE nome LIKE ?;";
             PreparedStatement stmt = con.prepareStatement(sql);
-          
+            stmt.setString(1, "%"+pesquisaTxt.getText()+"%");
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()){
-                Object[] dados = {rs.getString("nome"), rs.getString("matricula")};
+                Object[] dados = {rs.getString("nome"), rs.getString("matricula"), "Funcionário"};
+                modelo.addRow(dados);
+            }
+            
+            sql = "SELECT p.nome, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE nome LIKE ?;";
+            stmt.setString(1, "%"+pesquisaTxt.getText()+"%");
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+             
+            while(rs.next()){
+                Object[] dados = {rs.getString("nome"), rs.getString("matricula"), "Administrador"};
                 modelo.addRow(dados);
             }
             
@@ -458,28 +511,32 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             String sql = "SELECT p.id_pessoa, p.nome, p.email, p.cpf, f.matricula FROM pessoa p  JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE '"+matriculaFunc+"';";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
-            String idPessoa = "";
+            
             while(rs.next()){
-                idPessoa = rs.getString("id_pessoa");
+                idPessoalbl.setText(rs.getString("id_pessoa"));
                 nomeTxt.setText(rs.getString("nome"));
                 emailTxt.setText(rs.getString("email"));
                 cpfTxt.setText(rs.getString("cpf"));
             }
             
-            
             if(nomeTxt.getText().isBlank() || emailTxt.getText().isBlank() || cpfTxt.getText().isBlank()){
                 JOptionPane.showMessageDialog(null, "Preencha os campos com atenção");
                 return;
             }
+            JOptionPane.showMessageDialog(null,idPessoalbl.getText());
             sql = "UPDATE pessoa SET nome = ?, email = ?, cpf = ? WHERE id_pessoa = ?;";
             stmt = con.prepareStatement(sql);
             stmt.setString(1, nomeTxt.getText());           
             stmt.setString(2, emailTxt.getText());
             stmt.setString(3, cpfTxt.getText());
-            stmt.setString(4, idPessoa);
+            stmt.setString(4, idPessoalbl.getText());
             stmt.execute();
             
             JOptionPane.showMessageDialog(null,"Funcionario atualizado com sucesso");
+            
+            nomeTxt.setText(null);
+            emailTxt.setText(null);
+            cpfTxt.setText(null);
             
             rs.close();
             con.close();
@@ -493,18 +550,24 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         String funcSelecionado = tabelaFunc.getValueAt(tabelaFunc.getSelectedRow(), 1).toString();
         senhaTxt.setVisible(false);
         jLabel8.setVisible(false);
+        idPessoalbl.setVisible(false);
         comboCargo.setSelectedItem("Funcionario");
         try {
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.nome, p.email, p.cpf, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+funcSelecionado+"';";
+            String sql = "SELECT p.id_pessoa, p.nome, p.email, p.cpf, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+funcSelecionado+"';";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()){
+                idPessoalbl.setText(rs.getString("id_pessoa"));
                 nomeTxt.setText(rs.getString("nome"));
                 emailTxt.setText(rs.getString("email"));
                 cpfTxt.setText(rs.getString("cpf"));
             }
+            
+            sql = "SELECT p.id_pessoa, p.nome, p.email, p.cpf, a.matricula FROM pessoa p INNER JOIN administrador a ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+funcSelecionado+"';";
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
             
             rs.close();
             con.close();
@@ -516,37 +579,44 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
 //BOTAO DELETE
     private void deleteBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteBtMouseClicked
        //PEGA O FUNCIONARIO SELECONADO E VERIFICA SE FOI CORRETAMENTE SELECIONADO 
-        String matriculaFunc = tabelaFunc.getValueAt(tabelaFunc.getSelectedRow(), 1).toString(); 
+        String matriculaFunc = tabelaFunc.getValueAt(tabelaFunc.getSelectedRow(), 1).toString();         
+        String cargo = tabelaFunc.getValueAt(tabelaFunc.getSelectedRow(), 3).toString(); 
+         
         if(matriculaFunc.equals("")){
             JOptionPane.showMessageDialog(null, "Selecione um funcionario na tabela!");
             return;
         }
         try {
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.id_pessoa, p.nome, p.email, p.cpf, f.matricula FROM pessoa p  JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE '"+matriculaFunc+"';";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            //pega ID do funcionario
-            String idPessoa = "";
-            while(rs.next()){
-                idPessoa = rs.getString("id_pessoa");
-                nomeTxt.setText(rs.getString("nome"));
-                emailTxt.setText(rs.getString("email"));
-                cpfTxt.setText(rs.getString("cpf"));
+            String sql = "";
+            switch (cargo) {
+                case "Administrador":
+                    sql = "DELETE FROM administrador WHERE id_pessoa = '"+idPessoalbl.getText()+"';";
+                    break;
+                case "Funcionário":
+                    sql = "DELETE FROM funcionario WHERE id_pessoa = '"+idPessoalbl.getText()+"';";
+                    break;
+                default:
+                    throw new AssertionError();
             }
+            PreparedStatement stmt = con.prepareStatement(sql);
+           stmt.execute();
             //verificacao para inputs vazios
-            if(nomeTxt.getText().isBlank() || emailTxt.getText().isBlank() || cpfTxt.getText().isBlank()){
-                JOptionPane.showMessageDialog(null, "Preencha os campos com atenção");
+            if(idPessoalbl.getText().isBlank()){
+                JOptionPane.showMessageDialog(null, "selecione algum usuario na tabela ao lado");
                 return;
             }
-            //botao delete
-            sql = "DELETE FROM pessoa WHERE id_pessoa = '"+idPessoa+"';";
+
+            sql = "DELETE FROM pessoa WHERE id_pessoa = '"+idPessoalbl.getText()+"';";
             stmt = con.prepareStatement(sql);
             stmt.execute();
             
-            JOptionPane.showMessageDialog(null,"Funcionario atualizado com sucesso");
+            JOptionPane.showMessageDialog(null,"Deletado com sucesso");
             
-            rs.close();
+            nomeTxt.setText(null);
+            emailTxt.setText(null);
+            cpfTxt.setText(null);
+            
             con.close();
             stmt.close();
         }catch (SQLException e) {
@@ -564,10 +634,12 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     private javax.swing.JLabel deleteBt;
     private javax.swing.JLabel editBt;
     private javax.swing.JTextField emailTxt;
+    private javax.swing.JLabel idPessoalbl;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
