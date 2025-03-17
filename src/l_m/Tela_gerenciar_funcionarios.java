@@ -445,10 +445,21 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                 modelo.addRow(dados);
             }
             
-            sql = "SELECT p.nome, a.matricula FROM pessoa p INNER JOIN administrador a ON p.id_pessoa = a.id_pessoa;";
-            stmt = con.prepareStatement(sql);
-            rs = stmt.executeQuery();
-             
+            rs.close();
+            con.close();
+            stmt.close();
+        }catch (SQLException e) {
+            Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        try {
+                DefaultTableModel modelo = (DefaultTableModel) tabelaFunc.getModel();
+                modelo.setNumRows(0);
+                Connection con = DataBaseConnection.conexaoBanco();
+                String sql = "SELECT p.nome, a.matricula FROM pessoa p INNER JOIN administrador a ON p.id_pessoa = a.id_pessoa;";
+                PreparedStatement stmt = con.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery();
+            
             while(rs.next()){
                 Object[] dados = {rs.getString("nome"), rs.getString("matricula"), "Administrador"};
                 modelo.addRow(dados);
@@ -460,11 +471,12 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         }catch (SQLException e) {
             Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
         }
+        
     }//GEN-LAST:event_refreshBtMouseClicked
 
     private void searchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchMouseClicked
-         try {
-            DefaultTableModel modelo = (DefaultTableModel) tabelaFunc.getModel();
+        DefaultTableModel modelo = (DefaultTableModel) tabelaFunc.getModel();
+        try {
             modelo.setNumRows(0);
             Connection con = DataBaseConnection.conexaoBanco();
             String sql = "SELECT p.nome, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE nome LIKE ?;";
@@ -476,12 +488,23 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                 Object[] dados = {rs.getString("nome"), rs.getString("matricula"), "Funcionário"};
                 modelo.addRow(dados);
             }
+                                   
+            rs.close();
+            con.close();
+            stmt.close();
             
-            sql = "SELECT p.nome, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE nome LIKE ?;";
+        }catch (SQLException e) {
+            Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        try{
+            
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT p.nome, a.matricula FROM pessoa p INNER JOIN administrador a ON p.id_pessoa = a.id_pessoa WHERE nome LIKE ?;";
+            PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, "%"+pesquisaTxt.getText()+"%");
-            stmt = con.prepareStatement(sql);
-            rs = stmt.executeQuery();
-             
+            ResultSet rs = stmt.executeQuery();
+            
             while(rs.next()){
                 Object[] dados = {rs.getString("nome"), rs.getString("matricula"), "Administrador"};
                 modelo.addRow(dados);
@@ -490,10 +513,12 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             rs.close();
             con.close();
             stmt.close();
-            
+                        
         }catch (SQLException e) {
             Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
         }
+        
+        
     }//GEN-LAST:event_searchMouseClicked
 
     private void emailTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailTxtActionPerformed

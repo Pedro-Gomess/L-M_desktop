@@ -3,7 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
 package l_m;
-
+import java.io.File;
+import java.sql.ResultSet;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.sql.PreparedStatement;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Pedro53722376
@@ -15,6 +24,26 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
      */
     public Tela_produtos() {
         initComponents();
+        tableLivros.getTableHeader().setReorderingAllowed(false);
+        DefaultTableModel modelo = (DefaultTableModel) tableLivros.getModel();
+        try{
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT id_livro, titulo, categoria FROM livros;";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                Object [] dados = {rs.getString("id_livro"), rs.getString("titulo"), rs.getString("categoria")};
+                modelo.addRow(dados);
+            }
+            
+            rs.close();
+            stmt.close();
+            con.close();
+        }catch(SQLException ex){
+            Logger.getLogger(Tela_produtos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     /**
@@ -27,27 +56,26 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         imagemFundo1 = new imagemfundo.ImagemFundo();
-        matriculaTxt1 = new javax.swing.JTextField();
+        tituloTxt = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         nomeTxt = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        matriculaTxt = new javax.swing.JTextField();
+        IdTxt = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        cpfTxt = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
         comboCargo = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        comboCargo1 = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
+        addArquivo = new javax.swing.JButton();
+        path = new javax.swing.JTextField();
+        refreshBtn = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableLivros = new javax.swing.JTable();
+        searchBt = new javax.swing.JLabel();
 
         setClosable(true);
         setIconifiable(true);
@@ -56,11 +84,11 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
 
         imagemFundo1.setPreferredSize(new java.awt.Dimension(1200, 720));
 
-        matriculaTxt1.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
-        matriculaTxt1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        matriculaTxt1.addActionListener(new java.awt.event.ActionListener() {
+        tituloTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
+        tituloTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        tituloTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                matriculaTxt1ActionPerformed(evt);
+                tituloTxtActionPerformed(evt);
             }
         });
 
@@ -82,31 +110,17 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         jLabel7.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
         jLabel7.setText("Nome:");
 
-        matriculaTxt.setEditable(false);
-        matriculaTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
-        matriculaTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        matriculaTxt.addActionListener(new java.awt.event.ActionListener() {
+        IdTxt.setEditable(false);
+        IdTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
+        IdTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        IdTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                matriculaTxtActionPerformed(evt);
+                IdTxtActionPerformed(evt);
             }
         });
 
         jLabel3.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
         jLabel3.setText("ID:");
-
-        jLabel8.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
-        jLabel8.setText("Tipo:");
-
-        cpfTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
-        cpfTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        cpfTxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cpfTxtActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
-        jLabel4.setText("Quantidade:");
 
         comboCargo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Funcionário", "Cliente" }));
         comboCargo.setBorder(null);
@@ -123,11 +137,18 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/delete.png"))); // NOI18N
         jLabel10.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        comboCargo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Funcionário", "Cliente" }));
-        comboCargo1.setBorder(null);
-
         jLabel12.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
         jLabel12.setText("Inserir arquivo:");
+
+        addArquivo.setText("Escolher arquivo");
+        addArquivo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addArquivoMouseClicked(evt);
+            }
+        });
+
+        path.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
+        path.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -146,38 +167,35 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(16, 16, 16)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(nomeTxt)
-                                .addComponent(matriculaTxt)
-                                .addComponent(cpfTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
-                                .addComponent(comboCargo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(comboCargo1, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addGap(130, 130, 130)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel7)
-                                        .addComponent(jLabel8))))
+                                    .addComponent(jLabel7))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(105, 105, 105)
+                                    .addComponent(jLabel9))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(147, 147, 147)
+                                    .addComponent(jLabel3))
+                                .addComponent(nomeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(IdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(comboCargo, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(147, 147, 147)
-                                .addComponent(jLabel3))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(102, 102, 102)
-                                .addComponent(jLabel4))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(105, 105, 105)
-                                .addComponent(jLabel9))))
+                                .addComponent(path, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(addArquivo, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
+                        .addGap(107, 107, 107)
+                        .addComponent(jLabel12))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(44, 44, 44)
                         .addComponent(jLabel5)
-                        .addGap(81, 81, 81)
+                        .addGap(77, 77, 77)
                         .addComponent(jLabel6)
-                        .addGap(78, 78, 78)
-                        .addComponent(jLabel10))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(96, 96, 96)
-                        .addComponent(jLabel12)))
-                .addContainerGap(39, Short.MAX_VALUE))
+                        .addGap(82, 82, 82)
+                        .addComponent(jLabel10)))
+                .addContainerGap(118, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -189,55 +207,63 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(matriculaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(IdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(nomeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cpfTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel8)
-                .addGap(10, 10, 10)
-                .addComponent(comboCargo1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel9)
-                .addGap(5, 5, 5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(comboCargo, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(11, 11, 11)
                 .addComponent(jLabel12)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+                .addGap(43, 43, 43)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addArquivo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(path, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel6)
                         .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)))
-                .addGap(22, 22, 22))
+                .addGap(36, 36, 36))
         );
 
-        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/refresh.png"))); // NOI18N
-        jLabel11.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        refreshBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/refresh.png"))); // NOI18N
+        refreshBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        refreshBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                refreshBtnMouseClicked(evt);
+            }
+        });
 
-        jTable1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableLivros.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        tableLivros.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", " Nome"
+                "ID", " Titulo", "Categoria"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tableLivros);
+
+        searchBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/searchIcon.png"))); // NOI18N
+        searchBt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                searchBtMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout imagemFundo1Layout = new javax.swing.GroupLayout(imagemFundo1);
         imagemFundo1.setLayout(imagemFundo1Layout);
@@ -245,14 +271,16 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(imagemFundo1Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 314, Short.MAX_VALUE)
-                .addGroup(imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, imagemFundo1Layout.createSequentialGroup()
-                        .addComponent(matriculaTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel11)
-                        .addGap(48, 48, 48))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 216, Short.MAX_VALUE)
+                .addGroup(imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(imagemFundo1Layout.createSequentialGroup()
+                        .addComponent(tituloTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(searchBt)
+                        .addGap(27, 27, 27)
+                        .addComponent(refreshBtn)
+                        .addGap(22, 22, 22))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         imagemFundo1Layout.setVerticalGroup(
             imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -260,8 +288,9 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             .addGroup(imagemFundo1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(matriculaTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11))
+                    .addComponent(tituloTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(refreshBtn)
+                    .addComponent(searchBt))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1))
         );
@@ -276,91 +305,102 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(imagemFundo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(imagemFundo1, javax.swing.GroupLayout.PREFERRED_SIZE, 627, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void matriculaTxt1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matriculaTxt1ActionPerformed
+    private void tituloTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tituloTxtActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_matriculaTxt1ActionPerformed
+    }//GEN-LAST:event_tituloTxtActionPerformed
+
+    private void IdTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IdTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_IdTxtActionPerformed
 
     private void nomeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nomeTxtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_nomeTxtActionPerformed
 
-    private void matriculaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matriculaTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_matriculaTxtActionPerformed
+    private void searchBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchBtMouseClicked
+          try {
+            DefaultTableModel modelo = (DefaultTableModel) tableLivros.getModel();
+            modelo.setNumRows(0);
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT id_livro, titulo, categoria FROM livros WHERE titulo LIKE ?;";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, "%"+tituloTxt.getText()+"%");
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                Object[] dados = {rs.getString("id_livro"), rs.getString("titulo"), rs.getString("categoria")};
+                modelo.addRow(dados);
+            }
+ 
+            rs.close();
+            con.close();
+            stmt.close();
+            
+        }catch (SQLException e) {
+            Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+    }//GEN-LAST:event_searchBtMouseClicked
 
-    private void cpfTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cpfTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cpfTxtActionPerformed
+    private void refreshBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshBtnMouseClicked
+         DefaultTableModel modelo = (DefaultTableModel) tableLivros.getModel();
+        try{
+            modelo.setNumRows(0);
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT id_livro, titulo, categoria FROM livros;";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                Object [] dados = {rs.getString("id_livro"), rs.getString("titulo"), rs.getString("categoria")};
+                modelo.addRow(dados);
+            }
+            
+            rs.close();
+            stmt.close();
+            con.close();
+        }catch(SQLException ex){
+            Logger.getLogger(Tela_produtos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_refreshBtnMouseClicked
+
+    private void addArquivoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addArquivoMouseClicked
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.showOpenDialog(this);
+        File f = fc.getSelectedFile();
+        path.setText(f.getPath());
+    }//GEN-LAST:event_addArquivoMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField IdTxt;
+    private javax.swing.JButton addArquivo;
     private javax.swing.JComboBox<String> comboCargo;
-    private javax.swing.JComboBox<String> comboCargo1;
-    private javax.swing.JComboBox<String> comboCargo2;
-    private javax.swing.JComboBox<String> comboCargo3;
-    private javax.swing.JComboBox<String> comboCargo4;
-    private javax.swing.JComboBox<String> comboCargo5;
-    private javax.swing.JTextField cpfTxt;
-    private javax.swing.JTextField cpfTxt1;
-    private javax.swing.JTextField cpfTxt2;
     private imagemfundo.ImagemFundo imagemFundo1;
-    private imagemfundo.ImagemFundo imagemFundo2;
-    private imagemfundo.ImagemFundo imagemFundo3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel31;
-    private javax.swing.JLabel jLabel32;
-    private javax.swing.JLabel jLabel33;
-    private javax.swing.JLabel jLabel34;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField matriculaTxt;
-    private javax.swing.JTextField matriculaTxt1;
-    private javax.swing.JTextField matriculaTxt2;
-    private javax.swing.JTextField matriculaTxt3;
-    private javax.swing.JTextField matriculaTxt4;
-    private javax.swing.JTextField matriculaTxt5;
     private javax.swing.JTextField nomeTxt;
-    private javax.swing.JTextField nomeTxt1;
-    private javax.swing.JTextField nomeTxt2;
+    private javax.swing.JTextField path;
+    private javax.swing.JLabel refreshBtn;
+    private javax.swing.JLabel searchBt;
+    private javax.swing.JTable tableLivros;
+    private javax.swing.JTextField tituloTxt;
     // End of variables declaration//GEN-END:variables
 }
