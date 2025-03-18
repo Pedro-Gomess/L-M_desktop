@@ -18,7 +18,8 @@ import javax.swing.table.DefaultTableModel;
  * @author Pedro53722376
  */
 public class Tela_produtos extends javax.swing.JInternalFrame {
-
+    
+    
     /**
      * Creates new form Tela_produtos
      */
@@ -64,14 +65,15 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         jLabel7 = new javax.swing.JLabel();
         IdTxt = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        comboCargo = new javax.swing.JComboBox<>();
+        categoria = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        addBtn = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        addArquivo = new javax.swing.JButton();
-        path = new javax.swing.JTextField();
+        arquivoPdf = new javax.swing.JComboBox<>();
+        capaLivro = new javax.swing.JComboBox<>();
+        jLabel13 = new javax.swing.JLabel();
         refreshBtn = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableLivros = new javax.swing.JTable();
@@ -108,7 +110,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         });
 
         jLabel7.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
-        jLabel7.setText("Nome:");
+        jLabel7.setText("Titulo:");
 
         IdTxt.setEditable(false);
         IdTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
@@ -122,14 +124,22 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         jLabel3.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
         jLabel3.setText("ID:");
 
-        comboCargo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Funcionário", "Cliente" }));
-        comboCargo.setBorder(null);
+        categoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Funcionário", "Cliente" }));
+        categoria.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel9.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
         jLabel9.setText("Categoria:");
 
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/addIcon.png"))); // NOI18N
-        jLabel5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel12.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
+        jLabel12.setText("Inserir arquivo:");
+
+        addBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/addIcon.png"))); // NOI18N
+        addBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        addBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addBtnMouseClicked(evt);
+            }
+        });
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/edit.png"))); // NOI18N
         jLabel6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -137,18 +147,22 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/delete.png"))); // NOI18N
         jLabel10.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jLabel12.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
-        jLabel12.setText("Inserir arquivo:");
-
-        addArquivo.setText("Escolher arquivo");
-        addArquivo.addMouseListener(new java.awt.event.MouseAdapter() {
+        arquivoPdf.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        arquivoPdf.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                addArquivoMouseClicked(evt);
+                arquivoPdfMouseClicked(evt);
             }
         });
 
-        path.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
-        path.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        capaLivro.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        capaLivro.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                capaLivroMouseClicked(evt);
+            }
+        });
+
+        jLabel13.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
+        jLabel13.setText("Inserir capa:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -167,34 +181,34 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(16, 16, 16)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(130, 130, 130)
-                                    .addComponent(jLabel7))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(105, 105, 105)
-                                    .addComponent(jLabel9))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(147, 147, 147)
-                                    .addComponent(jLabel3))
-                                .addComponent(nomeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(IdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(comboCargo, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(path, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(addArquivo, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(130, 130, 130)
+                                .addComponent(jLabel7))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(105, 105, 105)
+                                .addComponent(jLabel9))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(147, 147, 147)
+                                .addComponent(jLabel3))
+                            .addComponent(nomeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(IdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(categoria, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(arquivoPdf, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(capaLivro, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(107, 107, 107)
+                        .addGap(101, 101, 101)
                         .addComponent(jLabel12))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(44, 44, 44)
-                        .addComponent(jLabel5)
+                        .addGap(38, 38, 38)
+                        .addComponent(addBtn)
                         .addGap(77, 77, 77)
                         .addComponent(jLabel6)
                         .addGap(82, 82, 82)
-                        .addComponent(jLabel10)))
+                        .addComponent(jLabel10))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(101, 101, 101)
+                        .addComponent(jLabel13)))
                 .addContainerGap(118, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -215,20 +229,22 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(comboCargo, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(11, 11, 11)
+                .addComponent(categoria, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel12)
-                .addGap(43, 43, 43)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addArquivo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(path, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(arquivoPdf, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(capaLivro, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
+                    .addComponent(addBtn)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel6)
                         .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)))
-                .addGap(36, 36, 36))
+                .addGap(79, 79, 79))
         );
 
         refreshBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/refresh.png"))); // NOI18N
@@ -284,7 +300,6 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         );
         imagemFundo1Layout.setVerticalGroup(
             imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(imagemFundo1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -293,6 +308,9 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                     .addComponent(searchBt))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1))
+            .addGroup(imagemFundo1Layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -300,12 +318,15 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(imagemFundo1, javax.swing.GroupLayout.PREFERRED_SIZE, 1201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(imagemFundo1, javax.swing.GroupLayout.PREFERRED_SIZE, 627, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 50, Short.MAX_VALUE)
+                .addComponent(imagemFundo1, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -371,33 +392,49 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         
     }//GEN-LAST:event_refreshBtnMouseClicked
 
-    private void addArquivoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addArquivoMouseClicked
+    private void arquivoPdfMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_arquivoPdfMouseClicked
         JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.showOpenDialog(this);
         File f = fc.getSelectedFile();
-        path.setText(f.getPath());
-    }//GEN-LAST:event_addArquivoMouseClicked
+        arquivoPdf.addItem(f.getPath());
+        
+    }//GEN-LAST:event_arquivoPdfMouseClicked
 
+    private void capaLivroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_capaLivroMouseClicked
+        
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.showOpenDialog(this);
+        arquivoPdf.addItem(fc.getName());
+    }//GEN-LAST:event_capaLivroMouseClicked
 
+    private void addBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addBtnMouseClicked
+        JOptionPane.showMessageDialog(null, arquivoPdf.getSelectedItem().toString());
+                
+    }//GEN-LAST:event_addBtnMouseClicked
+
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField IdTxt;
-    private javax.swing.JButton addArquivo;
-    private javax.swing.JComboBox<String> comboCargo;
+    private javax.swing.JLabel addBtn;
+    private javax.swing.JComboBox<String> arquivoPdf;
+    private javax.swing.JComboBox<String> capaLivro;
+    private javax.swing.JComboBox<String> categoria;
     private imagemfundo.ImagemFundo imagemFundo1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField nomeTxt;
-    private javax.swing.JTextField path;
     private javax.swing.JLabel refreshBtn;
     private javax.swing.JLabel searchBt;
     private javax.swing.JTable tableLivros;

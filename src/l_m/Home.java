@@ -4,11 +4,22 @@
  */
 package l_m;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Pedro53722376
  */
 public class Home extends javax.swing.JFrame {
+
+        String idPessoa = "";
+    
+    public String getIdPessoa() {
+        return idPessoa;
+    }
+
+    public void setIdPessoa(String idPessoa) {
+        this.idPessoa = idPessoa;
+    }
 
     /**
      * Creates new form Tela_inicial
@@ -158,6 +169,10 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_telaProdutosBtMouseClicked
 
     private void telaFuncionarioBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_telaFuncionarioBtMouseClicked
+        if(getIdPessoa().isBlank()){
+            JOptionPane.showMessageDialog(null, "Só administradores tem acesso a essa pagina!");
+            return;
+        }
         Tela_gerenciar_funcionarios TGF = new Tela_gerenciar_funcionarios();
         painel.add(TGF);
         TGF.setVisible(true);

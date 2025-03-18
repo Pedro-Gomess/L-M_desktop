@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  * @author Pedro53722376
  */
 public class Login extends javax.swing.JFrame {
-    String idPessoa = "";
+
     /**
      * Creates new form Login
      */
@@ -162,8 +162,9 @@ public class Login extends javax.swing.JFrame {
             .addGroup(imagemFundo1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 240, Short.MAX_VALUE)
-                .addComponent(painel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 254, Short.MAX_VALUE)
+                .addComponent(painel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         imagemFundo1Layout.setVerticalGroup(
             imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -178,17 +179,11 @@ public class Login extends javax.swing.JFrame {
         painel1.setLayout(painel1Layout);
         painel1Layout.setHorizontalGroup(
             painel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(imagemFundo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
+            .addComponent(imagemFundo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         painel1Layout.setVerticalGroup(
             painel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(imagemFundo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(39, Short.MAX_VALUE))
+            .addComponent(imagemFundo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -213,7 +208,7 @@ public class Login extends javax.swing.JFrame {
 
         try{
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT a.id_administrador, a.matricula, p.senha FROM administrador a JOIN pessoa p on p.id_pessoa = a.id_pessoa\n" +
+            String sql = "SELECT a.id_pessoa, a.id_administrador, a.matricula, p.senha FROM administrador a JOIN pessoa p on p.id_pessoa = a.id_pessoa\n" +
             "WHERE a.matricula = ? AND p.senha = ?;";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, matriculaTxt.getText());
@@ -224,10 +219,12 @@ public class Login extends javax.swing.JFrame {
             if(rs.next()){
                 Home home = new Home();
                 home.setVisible(true);
+                home.setIdPessoa(rs.getString("id_pessoa"));
+                JOptionPane.showMessageDialog(null, home.getIdPessoa());
                 return;
             }
             
-            sql = "SELECT f.id_funcionario, f.matricula, p.senha FROM funcionario f JOIN pessoa p on p.id_pessoa = f.id_pessoa\n" +
+            sql = "SELECT  f.id_funcionario, f.matricula, p.senha FROM funcionario f JOIN pessoa p on p.id_pessoa = f.id_pessoa\n" +
             "WHERE f.matricula = ? AND p.senha = ?;";
             stmt = con.prepareStatement(sql);
             
@@ -251,6 +248,7 @@ public class Login extends javax.swing.JFrame {
 
     
     }//GEN-LAST:event_EntrarBtMouseClicked
+
 
     private void recuperarSenhaBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recuperarSenhaBtMouseClicked
         Recuperar_senha rs = new Recuperar_senha();
