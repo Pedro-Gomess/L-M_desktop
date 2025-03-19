@@ -18,8 +18,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Pedro53722376
  */
 public class Tela_produtos extends javax.swing.JInternalFrame {
-    
-    
+
     /**
      * Creates new form Tela_produtos
      */
@@ -410,8 +409,20 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_capaLivroMouseClicked
 
     private void addBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addBtnMouseClicked
-        JOptionPane.showMessageDialog(null, arquivoPdf.getSelectedItem().toString());
-                
+        String fileName = arquivoPdf.getSelectedItem().toString();
+        int lastDot = fileName.lastIndexOf(".");
+        String ext = "";
+        
+        if(lastDot != -1){
+            ext = fileName.substring(lastDot + 1).toLowerCase();
+        }        
+        
+        if(!ext.equals("pdf")){
+            JOptionPane.showMessageDialog(null, "O arquivo deve estar em formato pdf!");
+            return;
+        }
+        
+        
     }//GEN-LAST:event_addBtnMouseClicked
 
     

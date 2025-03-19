@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author Pedro53722376
@@ -205,7 +206,8 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null,"Os campos não podem estar vazios!");
             return;
         }
-
+        
+     
         try{
             Connection con = DataBaseConnection.conexaoBanco();
             String sql = "SELECT a.id_pessoa, a.id_administrador, a.matricula, p.senha FROM administrador a JOIN pessoa p on p.id_pessoa = a.id_pessoa\n" +
@@ -220,7 +222,6 @@ public class Login extends javax.swing.JFrame {
                 Home home = new Home();
                 home.setVisible(true);
                 home.setIdPessoa(rs.getString("id_pessoa"));
-                JOptionPane.showMessageDialog(null, home.getIdPessoa());
                 return;
             }
             

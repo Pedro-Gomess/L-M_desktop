@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
  * @author Pedro53722376
  */
 public class Home extends javax.swing.JFrame {
-
+    //PEGE O ID DO USUARIO LOGADO
         String idPessoa = "";
     
     public String getIdPessoa() {
@@ -169,6 +169,7 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_telaProdutosBtMouseClicked
 
     private void telaFuncionarioBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_telaFuncionarioBtMouseClicked
+        //CONDIÇAO PARA PERMITIR APENAS ADIMINISTRADORES ACESSAR ESSA PAGINA
         if(getIdPessoa().isBlank()){
             JOptionPane.showMessageDialog(null, "Só administradores tem acesso a essa pagina!");
             return;

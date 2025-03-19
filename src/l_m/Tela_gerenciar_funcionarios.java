@@ -11,11 +11,19 @@ import java.util.logging.Logger;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.util.regex.Pattern;
 /**
  *
  * @author Pedro53722376
  */
 public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
+    //FUNCAO PARA VERIFICAR SE EMAIL E VALIDO
+    public static final String EMAIL_REGEX  = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+    public static boolean emailIsValid(String email){
+        return Pattern.matches(EMAIL_REGEX , email);
+    };
+    
+    //FUNCAO PARA GERAR A MATRICULA DO USUARIO
     public static String funcaoMatricula(String matricula){
         float num = Math.round(Math.random() * 1000 * 1000);
         int randomNum = (int)num;
@@ -77,7 +85,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         nomeTxt = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         senhaTxt = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
+        senhaLbl = new javax.swing.JLabel();
         cpfTxt = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         comboCargo = new javax.swing.JComboBox<>();
@@ -134,8 +142,8 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel8.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
-        jLabel8.setText("Senha:");
+        senhaLbl.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
+        senhaLbl.setText("Senha:");
 
         cpfTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
         cpfTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
@@ -218,7 +226,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                             .addComponent(nomeTxt)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(130, 130, 130)
-                                .addComponent(jLabel8))
+                                .addComponent(senhaLbl))
                             .addComponent(senhaTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
                             .addComponent(cpfTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
                             .addComponent(comboCargo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -256,7 +264,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cpfTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel8)
+                .addComponent(senhaLbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(senhaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -393,6 +401,22 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_pesquisaTxtActionPerformed
 
     private void addBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addBtMouseClicked
+        // VERIFICACAO PARA CONFERIR SE MO EMAIL E VALIDO
+        if(!emailIsValid(emailTxt.getText())){
+            JOptionPane.showMessageDialog(null, "Email invalido!");
+            return;
+        }       
+        
+        //VERIFICA SE O CAMPO CPF TEM ALGO ALEM DE NUMEROS
+        char[] cpfArray = cpfTxt.getText().toCharArray();
+        for(int i = 0; i < cpfArray.length; i++){
+            if(!Character.isDigit(cpfArray[i]) || cpfArray.length != 11){
+                JOptionPane.showMessageDialog(null, "O campo CPF deve conter apenas 11 numeros");
+                return;
+            }
+        }
+               
+        //INSERT NA TABELA 'PESSOA'
         try{
             Connection con = DataBaseConnection.conexaoBanco();
             String sql = "INSERT INTO pessoa(nome, email, cpf, senha) VALUES(?,?,?,?)";
@@ -403,15 +427,35 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             stmt.setString(3,cpfTxt.getText());
             stmt.setString(4,senhaTxt.getText());
             stmt.execute();
-        //verificação para conferir o cargo do cadastrado e paar qual tabela o usuario vai ser inserido
+       
+            stmt.close();
+            con.close();
+        }catch(SQLException ex){
+             Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, ex);
+        }   
+        //INSERT NA TABELA FUNCIONARIO OU ADMINISTRADOR
+        try{
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            
+             //verificação para conferir o cargo do cadastrado e paar qual tabela o usuario vai ser inserido
             String argFuncao = "FUNC";
             switch (comboCargo.getSelectedItem().toString()) {
                 case "Administrador":
                     argFuncao = "ADM";
-                    sql = "INSERT INTO administrador (matricula, id_pessoa) VALUES('"+funcaoMatricula(argFuncao)+"', (SELECT id_pessoa FROM pessoa ORDER BY id_pessoa DESC LIMIT 1));";
+                    sql = "INSERT INTO administrador (matricula, id_pessoa) VALUES('"+funcaoMatricula(argFuncao)+"', (SELECT id_pessoa FROM pessoa WHERE email = ? AND senha = ? AND cpf = ?));";
+                    stmt.setString(1,emailTxt.getText());
+                    stmt.setString(2,senhaTxt.getText());
+                    stmt.setString(3,cpfTxt.getText());
+                    stmt.execute();
                     break;
                 case "Funcionário":
-                    sql = "INSERT INTO funcionario (matricula, id_pessoa) VALUES('"+funcaoMatricula(argFuncao)+"', (SELECT id_pessoa FROM pessoa ORDER BY id_pessoa DESC LIMIT 1));";
+                    sql = "INSERT INTO funcionario (matricula, id_pessoa) VALUES('"+funcaoMatricula(argFuncao)+"', (SELECT id_pessoa FROM pessoa WHERE email = ? AND senha = ? AND cpf = ?);";
+                    stmt.setString(1,emailTxt.getText());
+                    stmt.setString(2,senhaTxt.getText());
+                    stmt.setString(3,cpfTxt.getText());
+                    stmt.execute();
                     break;
                 default:
                     throw new AssertionError();
@@ -423,10 +467,8 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             nomeTxt.setText(null);
             emailTxt.setText(null);
             cpfTxt.setText(null);
-            stmt.close();
-            con.close();
         }catch(SQLException ex){
-             Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_addBtMouseClicked
     //botão refresh 
@@ -572,9 +614,10 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_editBtMouseClicked
 
     private void tabelaFuncMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaFuncMouseClicked
+        
         String funcSelecionado = tabelaFunc.getValueAt(tabelaFunc.getSelectedRow(), 1).toString();
         senhaTxt.setVisible(false);
-        jLabel8.setVisible(false);
+        senhaLbl.setVisible(false);
         idPessoalbl.setVisible(false);
         comboCargo.setSelectedItem("Funcionario");
         try {
@@ -593,7 +636,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             sql = "SELECT p.id_pessoa, p.nome, p.email, p.cpf, a.matricula FROM pessoa p INNER JOIN administrador a ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+funcSelecionado+"';";
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
-            
+             
             rs.close();
             con.close();
             stmt.close();
@@ -666,7 +709,6 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -675,7 +717,9 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     private javax.swing.JTextField pesquisaTxt;
     private javax.swing.JLabel refreshBt;
     private javax.swing.JLabel search;
+    private javax.swing.JLabel senhaLbl;
     private javax.swing.JTextField senhaTxt;
     private javax.swing.JTable tabelaFunc;
     // End of variables declaration//GEN-END:variables
 }
+
