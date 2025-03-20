@@ -19,6 +19,14 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Tela_produtos extends javax.swing.JInternalFrame {
 
+    public static String getExt(String ext){
+        int lastDot = ext.lastIndexOf(".");
+        if(lastDot != -1){
+            ext = ext.substring(lastDot + 1).toLowerCase();
+        }        
+        
+        return ext;
+    };
     /**
      * Creates new form Tela_produtos
      */
@@ -396,32 +404,30 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.showOpenDialog(this);
         File f = fc.getSelectedFile();
-        arquivoPdf.addItem(f.getPath());
+        if(!getExt(f.getPath()).equals("pdf")){
+            JOptionPane.showMessageDialog(null, "somente arquivos pdf");
+            return;
+        }
+        arquivoPdf.addItem(f.getName());
         
     }//GEN-LAST:event_arquivoPdfMouseClicked
-
+    
     private void capaLivroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_capaLivroMouseClicked
         
         JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.showOpenDialog(this);
-        arquivoPdf.addItem(fc.getName());
+        File f = fc.getSelectedFile();
+        if(!getExt(f.getPath()).equals("png") && !getExt(f.getPath()).equals("jpg")){
+            JOptionPane.showMessageDialog(null, "somente arquivos png ou jpg" + getExt(f.getPath()) );
+            
+            return;
+        }
+        capaLivro.addItem(f.getPath());
     }//GEN-LAST:event_capaLivroMouseClicked
 
     private void addBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addBtnMouseClicked
-        String fileName = arquivoPdf.getSelectedItem().toString();
-        int lastDot = fileName.lastIndexOf(".");
-        String ext = "";
-        
-        if(lastDot != -1){
-            ext = fileName.substring(lastDot + 1).toLowerCase();
-        }        
-        
-        if(!ext.equals("pdf")){
-            JOptionPane.showMessageDialog(null, "O arquivo deve estar em formato pdf!");
-            return;
-        }
-        
+           
         
     }//GEN-LAST:event_addBtnMouseClicked
 
