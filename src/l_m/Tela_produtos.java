@@ -423,7 +423,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             
             return;
         }
-        capaLivro.addItem(f.getPath());
+        capaLivro.addItem(f.getName());
     }//GEN-LAST:event_capaLivroMouseClicked
 
     private void addBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addBtnMouseClicked

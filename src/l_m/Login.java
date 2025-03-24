@@ -35,174 +35,167 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        painel1 = new javax.swing.JPanel();
         imagemFundo1 = new imagemfundo.ImagemFundo();
         painel = new javax.swing.JPanel();
-        matriculaTxt = new javax.swing.JTextField();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
-        recuperarSenhaBt = new javax.swing.JLabel();
-        jPanel9 = new javax.swing.JPanel();
-        EntrarBt = new javax.swing.JLabel();
-        senhaTxt = new javax.swing.JPasswordField();
+        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        senhaTxt = new javax.swing.JPasswordField();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        imagemFundo2 = new imagemfundo.ImagemFundo();
+        jLabel4 = new javax.swing.JLabel();
+        entrarBtn = new javax.swing.JLabel();
+        recuperaSenhaBt = new javax.swing.JLabel();
+        matriculaTxt = new javax.swing.JTextField();
+
+        javax.swing.GroupLayout imagemFundo1Layout = new javax.swing.GroupLayout(imagemFundo1);
+        imagemFundo1.setLayout(imagemFundo1Layout);
+        imagemFundo1Layout.setHorizontalGroup(
+            imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 403, Short.MAX_VALUE)
+        );
+        imagemFundo1Layout.setVerticalGroup(
+            imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 588, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         painel.setBackground(new java.awt.Color(255, 255, 255));
-        painel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 10, true));
 
-        matriculaTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
-        matriculaTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        matriculaTxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                matriculaTxtActionPerformed(evt);
-            }
-        });
+        jLabel2.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
+        jLabel2.setText("Matricula:");
 
-        jLabel14.setFont(new java.awt.Font("Malgun Gothic", 0, 24)); // NOI18N
-        jLabel14.setText("Matrícula:");
+        jLabel3.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
+        jLabel3.setText("Senha:");
 
-        jLabel15.setFont(new java.awt.Font("Malgun Gothic", 0, 24)); // NOI18N
-        jLabel15.setText("Senha:");
+        senhaTxt.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jLabel16.setFont(new java.awt.Font("Malgun Gothic", 1, 36)); // NOI18N
-        jLabel16.setText("LOGIN");
+        jPanel2.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel2.setPreferredSize(new java.awt.Dimension(105, 2));
 
-        recuperarSenhaBt.setFont(new java.awt.Font("Malgun Gothic", 1, 18)); // NOI18N
-        recuperarSenhaBt.setText("Esqueci minha senha");
-        recuperarSenhaBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        recuperarSenhaBt.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                recuperarSenhaBtMouseClicked(evt);
-            }
-        });
-
-        jPanel9.setBackground(new java.awt.Color(0, 0, 0));
-        jPanel9.setPreferredSize(new java.awt.Dimension(180, 2));
-
-        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 180, Short.MAX_VALUE)
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 105, Short.MAX_VALUE)
         );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 2, Short.MAX_VALUE)
         );
 
-        EntrarBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/Captura de tela 2025-02-28 162748.png"))); // NOI18N
-        EntrarBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        EntrarBt.addMouseListener(new java.awt.event.MouseAdapter() {
+        jLabel1.setFont(new java.awt.Font("Malgun Gothic", 1, 24)); // NOI18N
+        jLabel1.setText("LOGIN");
+
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/Logo.png"))); // NOI18N
+
+        javax.swing.GroupLayout imagemFundo2Layout = new javax.swing.GroupLayout(imagemFundo2);
+        imagemFundo2.setLayout(imagemFundo2Layout);
+        imagemFundo2Layout.setHorizontalGroup(
+            imagemFundo2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(imagemFundo2Layout.createSequentialGroup()
+                .addGap(52, 52, 52)
+                .addComponent(jLabel4)
+                .addContainerGap(253, Short.MAX_VALUE))
+        );
+        imagemFundo2Layout.setVerticalGroup(
+            imagemFundo2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(imagemFundo2Layout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(jLabel4)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        entrarBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/btEntrar.png"))); // NOI18N
+        entrarBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        entrarBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                EntrarBtMouseClicked(evt);
+                entrarBtnMouseClicked(evt);
             }
         });
 
-        senhaTxt.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        recuperaSenhaBt.setFont(new java.awt.Font("Malgun Gothic", 0, 14)); // NOI18N
+        recuperaSenhaBt.setText("Recuperar senha");
+        recuperaSenhaBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        recuperaSenhaBt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                recuperaSenhaBtMouseClicked(evt);
+            }
+        });
+
+        matriculaTxt.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout painelLayout = new javax.swing.GroupLayout(painel);
         painel.setLayout(painelLayout);
         painelLayout.setHorizontalGroup(
             painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelLayout.createSequentialGroup()
-                .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(imagemFundo2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(painelLayout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jLabel16))
-                    .addGroup(painelLayout.createSequentialGroup()
-                        .addGap(118, 118, 118)
+                        .addComponent(senhaTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(140, 140, 140))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLayout.createSequentialGroup()
                         .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(recuperarSenhaBt)))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addGap(123, 123, 123))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLayout.createSequentialGroup()
+                        .addComponent(entrarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(111, 111, 111))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLayout.createSequentialGroup()
+                        .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(recuperaSenhaBt)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(121, 121, 121))
                     .addGroup(painelLayout.createSequentialGroup()
-                        .addGap(145, 145, 145)
-                        .addComponent(EntrarBt, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 122, Short.MAX_VALUE))
-            .addGroup(painelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(matriculaTxt, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(painelLayout.createSequentialGroup()
-                        .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel14)
-                            .addComponent(jLabel15))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(senhaTxt)))
+                        .addComponent(matriculaTxt)
+                        .addContainerGap())))
         );
         painelLayout.setVerticalGroup(
             painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel16)
-                .addGap(71, 71, 71)
-                .addComponent(jLabel14)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(matriculaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
-                .addComponent(jLabel15)
-                .addGap(12, 12, 12)
-                .addComponent(senhaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(recuperarSenhaBt)
-                    .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40)
-                .addComponent(EntrarBt, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(100, Short.MAX_VALUE))
-        );
-
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/Logo.png"))); // NOI18N
-
-        javax.swing.GroupLayout imagemFundo1Layout = new javax.swing.GroupLayout(imagemFundo1);
-        imagemFundo1.setLayout(imagemFundo1Layout);
-        imagemFundo1Layout.setHorizontalGroup(
-            imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(imagemFundo1Layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLayout.createSequentialGroup()
+                .addContainerGap(29, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(56, 56, 56)
+                .addComponent(jLabel2)
+                .addGap(24, 24, 24)
+                .addComponent(matriculaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 254, Short.MAX_VALUE)
-                .addComponent(painel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        imagemFundo1Layout.setVerticalGroup(
-            imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(imagemFundo1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(painel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout painel1Layout = new javax.swing.GroupLayout(painel1);
-        painel1.setLayout(painel1Layout);
-        painel1Layout.setHorizontalGroup(
-            painel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(imagemFundo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-        painel1Layout.setVerticalGroup(
-            painel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(imagemFundo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(senhaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addComponent(entrarBtn)
+                .addGap(18, 18, 18)
+                .addComponent(recuperaSenhaBt)
+                .addGap(7, 7, 7)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(113, 113, 113))
+            .addComponent(imagemFundo2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(painel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(painel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(painel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(painel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void EntrarBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EntrarBtMouseClicked
-        if(matriculaTxt.getText().equals("") || senhaTxt.getText().equals("")){
+    private void entrarBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_entrarBtnMouseClicked
+          if(matriculaTxt.getText().equals("") || senhaTxt.getText().equals("")){
             JOptionPane.showMessageDialog(null,"Os campos não podem estar vazios!");
             return;
         }
@@ -236,6 +229,7 @@ public class Login extends javax.swing.JFrame {
             if(rs.next()){
                 Home home = new Home();
                 home.setVisible(true);
+                dispose();
                 return;
             }
             
@@ -248,19 +242,14 @@ public class Login extends javax.swing.JFrame {
         }
 
     
-    }//GEN-LAST:event_EntrarBtMouseClicked
+    }//GEN-LAST:event_entrarBtnMouseClicked
 
-
-    private void recuperarSenhaBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recuperarSenhaBtMouseClicked
-        Recuperar_senha rs = new Recuperar_senha();
-        painel1.add(rs);
+    private void recuperaSenhaBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recuperaSenhaBtMouseClicked
+        recupera_senha rs = new recupera_senha();
         rs.setVisible(true);
-        
-    }//GEN-LAST:event_recuperarSenhaBtMouseClicked
+        dispose();
+    }//GEN-LAST:event_recuperaSenhaBtMouseClicked
 
-    private void matriculaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matriculaTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_matriculaTxtActionPerformed
 
     /**
      * @param args the command line arguments
@@ -298,17 +287,17 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel EntrarBt;
+    private javax.swing.JLabel entrarBtn;
     private imagemfundo.ImagemFundo imagemFundo1;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
+    private imagemfundo.ImagemFundo imagemFundo2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel9;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField matriculaTxt;
     private javax.swing.JPanel painel;
-    private javax.swing.JPanel painel1;
-    private javax.swing.JLabel recuperarSenhaBt;
+    private javax.swing.JLabel recuperaSenhaBt;
     private javax.swing.JPasswordField senhaTxt;
     // End of variables declaration//GEN-END:variables
 }

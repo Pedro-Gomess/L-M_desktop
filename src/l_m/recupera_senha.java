@@ -1,6 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package l_m;
 import java.sql.ResultSet;
@@ -12,21 +12,21 @@ import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
 import java.util.regex.Pattern;
 
-
 /**
  *
  * @author Pedro53722376
  */
-public class Recuperar_senha extends javax.swing.JInternalFrame {
+public class recupera_senha extends javax.swing.JFrame {
+    String idPessoa = "";
     //FUNCAO PARA VERIFICAR SE EMAIL E VALIDO
-        public static final String EMAIL_REGEX  = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-        public static boolean emailIsValid(String email){
-            return Pattern.matches(EMAIL_REGEX , email);
-        };
+    public static final String EMAIL_REGEX  = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+    public static boolean emailIsValid(String email){
+        return Pattern.matches(EMAIL_REGEX , email);
+    };
     /**
-     * Creates new form Recuparar_senha
+     * Creates new form recupera_senha
      */
-    public Recuperar_senha() {
+    public recupera_senha() {
         initComponents();
     }
 
@@ -45,16 +45,13 @@ public class Recuperar_senha extends javax.swing.JInternalFrame {
         matriculaTxt = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
-        senhaTxt4 = new javax.swing.JTextField();
+        senhaTxt = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
         emailTxt = new javax.swing.JTextField();
         jLabel25 = new javax.swing.JLabel();
         btRecuperaSenha4 = new javax.swing.JLabel();
 
-        setClosable(true);
-        setIconifiable(true);
-        setMaximizable(true);
-        setResizable(true);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel21.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/Logo.png"))); // NOI18N
 
@@ -75,11 +72,11 @@ public class Recuperar_senha extends javax.swing.JInternalFrame {
         jLabel23.setFont(new java.awt.Font("Malgun Gothic", 0, 24)); // NOI18N
         jLabel23.setText("Senha:");
 
-        senhaTxt4.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
-        senhaTxt4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        senhaTxt4.addActionListener(new java.awt.event.ActionListener() {
+        senhaTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
+        senhaTxt.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        senhaTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                senhaTxtActionPerformed(evt);
+                senhaTxtsenhaTxtActionPerformed(evt);
             }
         });
 
@@ -101,7 +98,7 @@ public class Recuperar_senha extends javax.swing.JInternalFrame {
         btRecuperaSenha4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btRecuperaSenha4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btRecuperaSenhaMouseClicked(evt);
+                btRecuperaSenha4btRecuperaSenhaMouseClicked(evt);
             }
         });
 
@@ -113,7 +110,7 @@ public class Recuperar_senha extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(matriculaTxt)
-                    .addComponent(senhaTxt4)
+                    .addComponent(senhaTxt)
                     .addComponent(emailTxt)))
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,7 +148,7 @@ public class Recuperar_senha extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel23)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(senhaTxt4, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(senhaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(71, 71, 71)
                 .addComponent(btRecuperaSenha4)
                 .addGap(235, 235, 235))
@@ -182,92 +179,126 @@ public class Recuperar_senha extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(imagemFundo5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(imagemFundo5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(imagemFundo5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(imagemFundo5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btRecuperaSenhaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btRecuperaSenhaMouseClicked
-        // VERIFICACAO PARA CONFERIR SE MO EMAIL E VALIDO
-        if(!emailIsValid(emailTxt.getText())){
-            JOptionPane.showMessageDialog(null, "Email invalido!");
-            return;
-        }       
-         
-        try{
-            Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.email, p.senha, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = ? AND email = ?;";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
+    private void matriculaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matriculaTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_matriculaTxtActionPerformed
 
-            stmt.setString(1, matriculaTxt.getText());
-            stmt.setString(2, emailTxt.getText());
-            stmt.execute();
-
-            while(rs.next()){
-                sql = "UPDATE pessoa SET senha = ? WHERE matricula = ?";
-                stmt = con.prepareStatement(sql);
-                stmt.setString(1, matriculaTxt.getText());
-                stmt.execute();
-                JOptionPane.showMessageDialog(null, "Senha atualizada com sucesso!");
-            }
-
-            rs.close();
-            con.close();
-            stmt.close();
-        }catch(SQLException ex){
-            Logger.getLogger(Recuperar_senha.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try{
-            Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.email, p.senha, a.matricula FROM pessoa p INNER JOIN administrador a ON p.id_pessoa = a.id_pessoa WHERE matricula = ? AND email = ?;";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-
-            stmt.setString(1, matriculaTxt.getText());
-            stmt.setString(2, emailTxt.getText());
-            stmt.execute();
-
-            while(rs.next()){
-                sql = "UPDATE pessoa SET senha = ? WHERE matricula = ?";
-                stmt = con.prepareStatement(sql);
-                stmt.setString(1, matriculaTxt.getText());
-                stmt.execute();
-                JOptionPane.showMessageDialog(null, "Senha atualizada com sucesso!");
-            }
-
-            rs.close();
-            con.close();
-            stmt.close();
-        }catch(SQLException ex){
-            Logger.getLogger(Recuperar_senha.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btRecuperaSenhaMouseClicked
+    private void senhaTxtsenhaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_senhaTxtsenhaTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_senhaTxtsenhaTxtActionPerformed
 
     private void emailTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailTxtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_emailTxtActionPerformed
 
-    private void senhaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_senhaTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_senhaTxtActionPerformed
+    private void btRecuperaSenha4btRecuperaSenhaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btRecuperaSenha4btRecuperaSenhaMouseClicked
+        // VERIFICACAO PARA CAMPOS EM BRANCO
+        if(matriculaTxt.getText().isBlank() || emailTxt.getText().isBlank() || senhaTxt.getText().isBlank()){
+            JOptionPane.showMessageDialog(null, "Nenhum campo deve estar vazio!");
+            return;
+        }
 
-    private void matriculaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matriculaTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_matriculaTxtActionPerformed
+        // VERIFICACAO PARA CONFERIR SE MO EMAIL E VALIDO
+        if(!emailIsValid(emailTxt.getText())){
+            JOptionPane.showMessageDialog(null, "Email invalido!");
+            return;
+        }
 
+        //VERIFICA SE O FUNCIONARIO EXISTE E ATUALIZA A SENHA
+        try{
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT f.id_pessoa, p.email, p.senha, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+matriculaTxt.getText()+"' AND email = '"+emailTxt.getText()+"';";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            
+            if(rs.next()){
+                idPessoa = rs.getString("id_pessoa");
+                sql =  "UPDATE pessoa SET senha = ? WHERE id_pessoa = ?";
+                stmt = con.prepareStatement(sql);
+                stmt.setString(1, senhaTxt.getText());        
+                stmt.setString(2, idPessoa);
+                stmt.execute();
+                JOptionPane.showMessageDialog(null, "Senha atualizada com scesso");
+   
+                con.close();
+                stmt.close();
+                rs.close();
+                
+                return;
+            }
+            
+            //VERIFICA SE O ADMINISTRADOR EXISTE E ATUALIZA A SENHA
+            sql = "SELECT a.id_pessoa, p.email, p.senha, a.matricula FROM pessoa p INNER JOIN administrador a ON p.id_pessoa = a.id_pessoa WHERE matricula = '"+matriculaTxt.getText()+"' AND email = '"+emailTxt.getText()+"';";
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            
+            if(rs.next()){
+                idPessoa = rs.getString("id_pessoa");
+                sql =  "UPDATE pessoa SET senha = ? WHERE id_pessoa = ?";
+                stmt = con.prepareStatement(sql);
+                stmt.setString(1, senhaTxt.getText());        
+                stmt.setString(2, idPessoa);
+                stmt.execute();
+                JOptionPane.showMessageDialog(null, "Senha atualizada com scesso");
+                
+                con.close();
+                stmt.close();
+                rs.close();
+                
+                return;
+            }
+                            
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "Não encontrado, tente novamente!");
+            Logger.getLogger(Recuperar_senha.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+    }//GEN-LAST:event_btRecuperaSenha4btRecuperaSenhaMouseClicked
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(recupera_senha.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(recupera_senha.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(recupera_senha.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(recupera_senha.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new recupera_senha().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btRecuperaSenha4;
@@ -280,6 +311,6 @@ public class Recuperar_senha extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel25;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JTextField matriculaTxt;
-    private javax.swing.JTextField senhaTxt4;
+    private javax.swing.JTextField senhaTxt;
     // End of variables declaration//GEN-END:variables
 }

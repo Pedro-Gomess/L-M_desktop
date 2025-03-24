@@ -290,7 +290,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Matrícula", "Nome", "cargo"
+                "Nome", "Matrícula", "cargo"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -573,9 +573,10 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Selecione um funcionario na tabela!");
             return;
         }
+        JOptionPane.showMessageDialog(null, matriculaFunc);
         try {
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.id_pessoa, p.nome, p.email, p.cpf, f.matricula FROM pessoa p  JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE '"+matriculaFunc+"';";
+            String sql = "SELECT p.id_pessoa, p.nome, p.email, p.cpf, f.matricula FROM pessoa p  JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+matriculaFunc+"';";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             
@@ -619,7 +620,6 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         senhaTxt.setVisible(false);
         senhaLbl.setVisible(false);
         idPessoalbl.setVisible(false);
-        comboCargo.setSelectedItem("Funcionario");
         try {
             Connection con = DataBaseConnection.conexaoBanco();
             String sql = "SELECT p.id_pessoa, p.nome, p.email, p.cpf, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+funcSelecionado+"';";
@@ -631,12 +631,9 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                 nomeTxt.setText(rs.getString("nome"));
                 emailTxt.setText(rs.getString("email"));
                 cpfTxt.setText(rs.getString("cpf"));
+                comboCargo.setSelectedItem("Funcionário");
             }
-            
-            sql = "SELECT p.id_pessoa, p.nome, p.email, p.cpf, a.matricula FROM pessoa p INNER JOIN administrador a ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+funcSelecionado+"';";
-            stmt = con.prepareStatement(sql);
-            rs = stmt.executeQuery();
-             
+                                    
             rs.close();
             con.close();
             stmt.close();
