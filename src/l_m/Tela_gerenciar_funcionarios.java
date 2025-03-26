@@ -419,8 +419,25 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         //INSERT NA TABELA 'PESSOA'
         try{
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "INSERT INTO pessoa(nome, email, cpf, senha) VALUES(?,?,?,?)";
+            String sql = "SELECT id_pessoa FROM pessoa WHERE email = ? AND cpf = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
+            
+            stmt.setString(1,emailTxt.getText());
+            stmt.setString(2,cpfTxt.getText());
+            ResultSet rs = stmt.executeQuery();                 
+            
+            if(rs.next()){
+                JOptionPane.showMessageDialog(null, "Usuario já cadastrado!");
+                
+                nomeTxt.setText(null);
+                emailTxt.setText(null);
+                cpfTxt.setText(null);
+                senhaTxt.setText(null);
+                return;
+            }
+            
+            sql = "INSERT INTO pessoa(nome, email, cpf, senha) VALUES(?,?,?,?)";
+            stmt = con.prepareStatement(sql);
             
             stmt.setString(1,nomeTxt.getText());
             stmt.setString(2,emailTxt.getText());
@@ -436,15 +453,14 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         //INSERT NA TABELA FUNCIONARIO OU ADMINISTRADOR
         try{
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "";
-            PreparedStatement stmt = con.prepareStatement(sql);
             
              //verificação para conferir o cargo do cadastrado e paar qual tabela o usuario vai ser inserido
             String argFuncao = "FUNC";
             switch (comboCargo.getSelectedItem().toString()) {
                 case "Administrador":
                     argFuncao = "ADM";
-                    sql = "INSERT INTO administrador (matricula, id_pessoa) VALUES('"+funcaoMatricula(argFuncao)+"', (SELECT id_pessoa FROM pessoa WHERE email = ? AND senha = ? AND cpf = ?));";
+                    String sql = "INSERT INTO administrador (matricula, id_pessoa) VALUES('"+funcaoMatricula(argFuncao)+"', (SELECT id_pessoa FROM pessoa WHERE email = ? AND senha = ? AND cpf = ?));";
+                    PreparedStatement stmt = con.prepareStatement(sql);
                     stmt.setString(1,emailTxt.getText());
                     stmt.setString(2,senhaTxt.getText());
                     stmt.setString(3,cpfTxt.getText());
@@ -452,6 +468,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                     break;
                 case "Funcionário":
                     sql = "INSERT INTO funcionario (matricula, id_pessoa) VALUES('"+funcaoMatricula(argFuncao)+"', (SELECT id_pessoa FROM pessoa WHERE email = ? AND senha = ? AND cpf = ?);";
+                    stmt = con.prepareStatement(sql);   
                     stmt.setString(1,emailTxt.getText());
                     stmt.setString(2,senhaTxt.getText());
                     stmt.setString(3,cpfTxt.getText());
@@ -460,20 +477,26 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                 default:
                     throw new AssertionError();
             }
-            stmt = con.prepareStatement(sql);
-            stmt.execute();
+          
             JOptionPane.showMessageDialog(null,"cadastrado concluido");
                         
             nomeTxt.setText(null);
             emailTxt.setText(null);
             cpfTxt.setText(null);
+            senhaTxt.setText(null);
         }catch(SQLException ex){
             Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_addBtMouseClicked
     //botão refresh 
     private void refreshBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshBtMouseClicked
-          // Exibe os itens do BD assim que se inicia a tela 
+        
+        nomeTxt.setText(null);
+        emailTxt.setText(null);
+        cpfTxt.setText(null);
+        senhaTxt.setText(null);
+
+        // Exibe os itens do BD assim que se inicia a tela 
         try {
             DefaultTableModel modelo = (DefaultTableModel) tabelaFunc.getModel();
             modelo.setNumRows(0);
@@ -496,7 +519,6 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         
         try {
                 DefaultTableModel modelo = (DefaultTableModel) tabelaFunc.getModel();
-                modelo.setNumRows(0);
                 Connection con = DataBaseConnection.conexaoBanco();
                 String sql = "SELECT p.nome, a.matricula FROM pessoa p INNER JOIN administrador a ON p.id_pessoa = a.id_pessoa;";
                 PreparedStatement stmt = con.prepareStatement(sql);
@@ -568,16 +590,17 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_emailTxtActionPerformed
 
     private void editBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editBtMouseClicked
-        String matriculaFunc = tabelaFunc.getValueAt(tabelaFunc.getSelectedRow(), 1).toString(); 
-        if(matriculaFunc.equals("")){
+        if(nomeTxt.getText().isBlank() || emailTxt.getText().isBlank() || cpfTxt.getText().isBlank()){
             JOptionPane.showMessageDialog(null, "Selecione um funcionario na tabela!");
             return;
         }
-        JOptionPane.showMessageDialog(null, matriculaFunc);
+              
         try {
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.id_pessoa, p.nome, p.email, p.cpf, f.matricula FROM pessoa p  JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+matriculaFunc+"';";
+            String sql = "SELECT p.id_pessoa, p.nome, p.email, p.cpf, f.matricula FROM pessoa p  JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE cpf = ? AND email= ? ;";
             PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, cpfTxt.getText());
+            stmt.setString(2, emailTxt.getText());
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()){
@@ -591,7 +614,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(null, "Preencha os campos com atenção");
                 return;
             }
-            JOptionPane.showMessageDialog(null,idPessoalbl.getText());
+
             sql = "UPDATE pessoa SET nome = ?, email = ?, cpf = ? WHERE id_pessoa = ?;";
             stmt = con.prepareStatement(sql);
             stmt.setString(1, nomeTxt.getText());           
@@ -605,7 +628,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             nomeTxt.setText(null);
             emailTxt.setText(null);
             cpfTxt.setText(null);
-            
+            senhaTxt.setText(null);
             rs.close();
             con.close();
             stmt.close();
@@ -644,36 +667,49 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
 //BOTAO DELETE
     private void deleteBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteBtMouseClicked
        //PEGA O FUNCIONARIO SELECONADO E VERIFICA SE FOI CORRETAMENTE SELECIONADO 
-        String matriculaFunc = tabelaFunc.getValueAt(tabelaFunc.getSelectedRow(), 1).toString();         
         String cargo = tabelaFunc.getValueAt(tabelaFunc.getSelectedRow(), 3).toString(); 
          
-        if(matriculaFunc.equals("")){
+        if(nomeTxt.getText().isBlank() || emailTxt.getText().isBlank() || cpfTxt.getText().isBlank()){
             JOptionPane.showMessageDialog(null, "Selecione um funcionario na tabela!");
             return;
         }
         try {
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "";
+            String sql;
+            PreparedStatement stmt;
             switch (cargo) {
                 case "Administrador":
-                    sql = "DELETE FROM administrador WHERE id_pessoa = '"+idPessoalbl.getText()+"';";
+                    sql = "DELETE FROM administrador WHERE id_pessoa = (SELECT id_pessoa WHERE  email = ? AND cpf = ?);";
+                    
+                    stmt = con.prepareStatement(sql);
+                    stmt.setString(1, emailTxt.getText());                     
+                    stmt.setString(2, cpfTxt.getText());
+                    
+                    stmt.execute();
                     break;
                 case "Funcionário":
-                    sql = "DELETE FROM funcionario WHERE id_pessoa = '"+idPessoalbl.getText()+"';";
+                    sql = "DELETE FROM funcionario WHERE id_pessoa = (SELECT id_pessoa WHERE  email = ? AND cpf = ?)";
+                    stmt = con.prepareStatement(sql);
+                    stmt.setString(1, emailTxt.getText());                     
+                    stmt.setString(2, cpfTxt.getText());
+                    
+                    stmt.execute();
                     break;
                 default:
                     throw new AssertionError();
             }
-            PreparedStatement stmt = con.prepareStatement(sql);
-           stmt.execute();
+           
             //verificacao para inputs vazios
             if(idPessoalbl.getText().isBlank()){
                 JOptionPane.showMessageDialog(null, "selecione algum usuario na tabela ao lado");
                 return;
             }
 
-            sql = "DELETE FROM pessoa WHERE id_pessoa = '"+idPessoalbl.getText()+"';";
+            sql = "DELETE FROM pessoa WHERE id_pessoa = (SELECT id_pessoa WHERE  email = ? AND cpf = ?);";
             stmt = con.prepareStatement(sql);
+            stmt.setString(1, emailTxt.getText());                     
+            stmt.setString(2, cpfTxt.getText());
+
             stmt.execute();
             
             JOptionPane.showMessageDialog(null,"Deletado com sucesso");
@@ -681,6 +717,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             nomeTxt.setText(null);
             emailTxt.setText(null);
             cpfTxt.setText(null);
+            senhaTxt.setText(null);
             
             con.close();
             stmt.close();
