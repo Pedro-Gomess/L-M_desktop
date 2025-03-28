@@ -199,7 +199,7 @@ public class Recuperar_senha extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btRecuperaSenhaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btRecuperaSenhaMouseClicked
-        // VERIFICACAO PARA CONFERIR SE MO EMAIL E VALIDO
+        // VERIFICACAO PARA CONFERIR SE O EMAIL E VALIDO
         if(!emailIsValid(emailTxt.getText())){
             JOptionPane.showMessageDialog(null, "Email invalido!");
             return;
@@ -247,7 +247,10 @@ public class Recuperar_senha extends javax.swing.JInternalFrame {
                 stmt.execute();
                 JOptionPane.showMessageDialog(null, "Senha atualizada com sucesso!");
             }
-
+            
+            Login l = new Login();
+            l.setVisible(true);
+            
             rs.close();
             con.close();
             stmt.close();

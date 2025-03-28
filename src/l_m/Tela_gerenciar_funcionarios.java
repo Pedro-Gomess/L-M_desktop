@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
  * @author Pedro53722376
  */
 public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
+    String idPessoa;
+
     //FUNCAO PARA VERIFICAR SE EMAIL E VALIDO
     public static final String EMAIL_REGEX  = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
     public static boolean emailIsValid(String email){
@@ -99,7 +101,6 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         tabelaFunc = new javax.swing.JTable();
         pesquisaTxt = new javax.swing.JTextField();
         search = new javax.swing.JLabel();
-        idPessoalbl = new javax.swing.JLabel();
 
         jLabel5.setText("jLabel5");
 
@@ -324,8 +325,6 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             }
         });
 
-        idPessoalbl.setToolTipText("");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -342,9 +341,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                         .addComponent(refreshBt)
                         .addGap(20, 20, 20))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(61, 61, 61)
-                        .addComponent(idPessoalbl)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(61, 300, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
@@ -359,10 +356,6 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                     .addComponent(search))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(idPessoalbl)
-                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -385,19 +378,19 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void nomeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nomeTxtActionPerformed
-        // TODO add your handling code here:
+    
     }//GEN-LAST:event_nomeTxtActionPerformed
 
     private void senhaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_senhaTxtActionPerformed
-        // TODO add your handling code here:
+      
     }//GEN-LAST:event_senhaTxtActionPerformed
 
     private void cpfTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cpfTxtActionPerformed
-        // TODO add your handling code here:
+       
     }//GEN-LAST:event_cpfTxtActionPerformed
 
     private void pesquisaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesquisaTxtActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_pesquisaTxtActionPerformed
 
     private void addBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addBtMouseClicked
@@ -602,11 +595,19 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_emailTxtActionPerformed
 
     private void editBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editBtMouseClicked
+        comboCargo.setSelectedItem("Funcionário");
+        //CONDICAO PARA CAMPOS VAZIOS
         if(nomeTxt.getText().isBlank() || emailTxt.getText().isBlank() || cpfTxt.getText().isBlank()){
             JOptionPane.showMessageDialog(null, "Selecione um funcionario na tabela!");
             return;
         }
-              
+        //CONDICAO PARA CAMPO SENHA PREENCHIDO     
+        if(!senhaTxt.getText().isBlank()){
+            JOptionPane.showMessageDialog(null, "O campo senha deve estar vazio");   
+            senhaTxt.setText(null);
+            return;
+        }
+        
         try {
              //VERIFICA SE USUARIO ESTA CADASTRADO
             Connection con = DataBaseConnection.conexaoBanco();
@@ -627,7 +628,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                 return;
             }
             //VERICACAO PARA CAMPOS VAZIOS
-            if(nomeTxt.getText().isBlank() || emailTxt.getText().isBlank() || cpfTxt.getText().isBlank() || idPessoalbl.getText().isBlank()){
+            if(nomeTxt.getText().isBlank() || emailTxt.getText().isBlank() || cpfTxt.getText().isBlank() || idPessoa.isBlank()){
                 JOptionPane.showMessageDialog(null, "Selecione um usuario na tabela");
                 return;
             }
@@ -637,7 +638,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             stmt.setString(1, nomeTxt.getText());           
             stmt.setString(2, emailTxt.getText());
             stmt.setString(3, cpfTxt.getText());
-            stmt.setString(4, idPessoalbl.getText());
+            stmt.setString(4, idPessoa);
             stmt.execute();
             
             JOptionPane.showMessageDialog(null,"Funcionario atualizado com sucesso");
@@ -657,11 +658,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     private void tabelaFuncMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaFuncMouseClicked
         
         String matriculaFunc = tabelaFunc.getValueAt(tabelaFunc.getSelectedRow(), 1).toString();
-        senhaTxt.setVisible(false);
-        senhaLbl.setVisible(false);
-        idPessoalbl.setVisible(false);
-        
-        
+
         try {
             Connection con = DataBaseConnection.conexaoBanco();
             String sql = "SELECT p.id_pessoa, p.nome, p.email, p.cpf, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+matriculaFunc+"';";
@@ -669,7 +666,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             ResultSet rs = stmt.executeQuery();
             
             if(rs.next()){
-                idPessoalbl.setText(rs.getString("id_pessoa"));
+                idPessoa = rs.getString("id_pessoa");
                 nomeTxt.setText(rs.getString("nome"));
                 emailTxt.setText(rs.getString("email"));
                 cpfTxt.setText(rs.getString("cpf"));
@@ -718,14 +715,14 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             
             switch (cargo) {
                 case "Administrador":
-                    sql = "DELETE FROM administrador WHERE id_pessoa = '"+idPessoalbl.getText()+"';";    
+                    sql = "DELETE FROM administrador WHERE id_pessoa = '"+idPessoa+"';";    
                     
                     stmt = con.prepareStatement(sql);                  
                     stmt.execute();
                     
                     break;
                 case "Funcionário":
-                    sql = "DELETE FROM funcionario WHERE id_pessoa = '"+idPessoalbl.getText()+"'";
+                    sql = "DELETE FROM funcionario WHERE id_pessoa = '"+idPessoa+"'";
                     
                     stmt = con.prepareStatement(sql);                 
                     stmt.execute();
@@ -767,7 +764,6 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     private javax.swing.JLabel deleteBt;
     private javax.swing.JLabel editBt;
     private javax.swing.JTextField emailTxt;
-    private javax.swing.JLabel idPessoalbl;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
