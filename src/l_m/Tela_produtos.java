@@ -15,14 +15,29 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.io.FileInputStream;
 import java.io.DataInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import javax.imageio.IIOException;
     
 /**
  *
  * @author Pedro53722376
  */
 public class Tela_produtos extends javax.swing.JInternalFrame {
+    String capaCaminho;
+    public File livroArq = null;
 
+    public String getCapaCaminho() {
+        return capaCaminho;
+    }
+
+    public void setCapaCaminho(String capaCaminho) {
+        this.capaCaminho = capaCaminho;
+    }
+    
+    
     public static String getExt(String ext){
         int lastDot = ext.lastIndexOf(".");
         if(lastDot != -1){
@@ -31,6 +46,73 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         
         return ext;
     };
+    
+    public File recupera(int id){
+        
+        try{
+        try{
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT id_livro, titulo, arquivo_path FROM livros WHERE id_livro = ?;";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            File file = null;
+            
+            if(rs.next()){
+                byte[] bytes = rs.getBytes("arquivo_path");
+                String titulo = rs.getString("titulo");
+                
+                file = new File("C:\\Livros\\Livro\\" + titulo + ".pdf");
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(bytes);
+                fos.close();
+            }
+            JOptionPane.showMessageDialog(null, "sucesso" + rs.getString("titulo"));
+            rs.close();
+            stmt.close();
+            con.close();
+            return file;
+        }catch(IOException io){
+            JOptionPane.showMessageDialog(null, "Arquivo não encontrado");
+        }
+        }catch(SQLException ex){
+            Logger.getLogger(Tela_produtos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public  boolean livroPDF(File livroPdf){
+         try {
+            
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "INSERT INTO livros(titulo, categoria, arquivo_path, capa_path) VALUES(?,?,?,?)";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            try{
+                InputStream is = new FileInputStream(livroPdf);
+                byte[] bytes = new byte[(int)livroPdf.length()];
+                int offSet = 0;
+                int numRead = 0;
+                while(offSet < bytes.length && (numRead = is.read(bytes, offSet, bytes.length-offSet)) >= 0){
+                    offSet += numRead;
+                }
+                stmt.setString(1, tituloTxt.getText());           
+                stmt.setString(2, categoria.getSelectedItem().toString());
+                stmt.setBytes(3, bytes);
+                stmt.setString(4, getCapaCaminho());
+                stmt.execute();
+
+                JOptionPane.showMessageDialog(null, "Livro adicionado co sucesso!");
+                con.close();
+                stmt.close();
+            }catch(IOException io){
+                JOptionPane.showMessageDialog(null, "Arquivo não encontrado");
+            }
+        }catch (SQLException e) {
+            Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
+        }
+
+        return false;
+    }
     /**
      * Creates new form Tela_produtos
      */
@@ -85,6 +167,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         selecionarArqBt = new javax.swing.JButton();
         capaFile = new javax.swing.JTextField();
         selecionarCapaBt = new javax.swing.JButton();
+        recuperaArq = new javax.swing.JLabel();
         refreshBtn = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableLivros = new javax.swing.JTable();
@@ -181,51 +264,64 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             }
         });
 
+        recuperaArq.setText("recuperar Arquivo");
+        recuperaArq.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        recuperaArq.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                recuperaArqMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(85, 85, 85)
-                        .addComponent(jLabel13))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(caminhoPath)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(selecionarArqBt))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(130, 130, 130)
-                            .addComponent(jLabel7))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(105, 105, 105)
-                            .addComponent(jLabel9))
-                        .addComponent(tituloAdd)
-                        .addComponent(categoria, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(capaFile, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(selecionarCapaBt)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(75, 75, 75)
-                        .addComponent(jLabel12))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(105, 105, 105)
+                        .addGap(16, 16, 16)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(85, 85, 85)
+                                .addComponent(jLabel13))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(caminhoPath)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(selecionarArqBt))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(130, 130, 130)
+                                    .addComponent(jLabel7))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(105, 105, 105)
+                                    .addComponent(jLabel9))
+                                .addComponent(tituloAdd)
+                                .addComponent(categoria, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(capaFile, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(selecionarCapaBt)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(75, 75, 75)
+                                .addComponent(jLabel12))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(105, 105, 105)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addGap(13, 13, 13))
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(13, 13, 13))
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(addBtn)
-                        .addGap(77, 77, 77)
-                        .addComponent(jLabel6)
-                        .addGap(82, 82, 82)
-                        .addComponent(jLabel10)
-                        .addGap(55, 55, 55)))
+                                .addGap(25, 25, 25)
+                                .addComponent(addBtn)
+                                .addGap(77, 77, 77)
+                                .addComponent(jLabel6)
+                                .addGap(82, 82, 82)
+                                .addComponent(jLabel10)
+                                .addGap(55, 55, 55))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(115, 115, 115)
+                        .addComponent(recuperaArq)))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -261,7 +357,9 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel6)
                         .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)))
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addGap(28, 28, 28)
+                .addComponent(recuperaArq)
+                .addContainerGap(60, Short.MAX_VALUE))
         );
 
         refreshBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/refresh.png"))); // NOI18N
@@ -412,25 +510,8 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Nenhum campo pode estar vazio");
             return;
         }
-        
-          try {
-            Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "INSERT INTO livros(titulo, categoria, arquivo_path, capa_path) VALUES(?,?,?,?)";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            
-            stmt.setString(1, tituloTxt.getText());           
-            stmt.setString(2, categoria.getSelectedItem().toString());
-            stmt.setString(3, caminhoPath.getText());
-            stmt.setString(4, capaFile.getText());
-            stmt.execute();
-            
-            JOptionPane.showMessageDialog(null, "Livro adicionado co sucesso!");
-            con.close();
-            stmt.close();
-            
-        }catch (SQLException e) {
-            Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
-        }
+        livroPDF(livroArq.getAbsoluteFile());
+         
     }//GEN-LAST:event_addBtnMouseClicked
 
     private void capaFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_capaFileActionPerformed
@@ -447,14 +528,14 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             JFileChooser fc = new JFileChooser();
             fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
             fc.showOpenDialog(this);
-            File f = fc.getSelectedFile();
+            livroArq = fc.getSelectedFile();
             
-            if(!getExt(f.getPath()).equals("pdf")){
+            if(!getExt(livroArq.getPath()).equals("pdf")){
                 JOptionPane.showMessageDialog(null, "somente arquivos pdf");
                 return;
             }
             
-            caminhoPath.setText(f.getPath());
+            caminhoPath.setText(livroArq.getPath());
         }catch(NullPointerException ex){
             JOptionPane.showMessageDialog(null, "Nenhum arquivo selecionado!");
         }
@@ -473,11 +554,15 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             }
             
             capaFile.setText(f.getPath());
-            
+            setCapaCaminho(f.getPath());
             }catch(NullPointerException ex){
             JOptionPane.showMessageDialog(null, "Nenhum arquivo selecionado!");
         }
     }//GEN-LAST:event_selecionarCapaBtMouseClicked
+
+    private void recuperaArqMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recuperaArqMouseClicked
+        recupera(1);
+    }//GEN-LAST:event_recuperaArqMouseClicked
 
     
     
@@ -497,6 +582,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel recuperaArq;
     private javax.swing.JLabel refreshBtn;
     private javax.swing.JLabel searchBt;
     private javax.swing.JButton selecionarArqBt;
