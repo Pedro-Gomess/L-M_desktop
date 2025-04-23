@@ -199,16 +199,14 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null,"Os campos não podem estar vazios!");
             return;
         }
-        
-     
+             
         try{
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT a.id_pessoa, a.id_administrador, a.matricula, p.senha FROM administrador a JOIN pessoa p on p.id_pessoa = a.id_pessoa\n" +
+            String sql = "SELECT a.id_pessoa, a.id_administrador, a.matricula, p.senha FROM administrador a JOIN pessoas p on p.id_pessoa = a.id_pessoa\n" +
             "WHERE a.matricula = ? AND p.senha = ?;";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, matriculaTxt.getText());
             stmt.setString(2, senhaTxt.getText());
-
             ResultSet rs = stmt.executeQuery();
 
             if(rs.next()){
