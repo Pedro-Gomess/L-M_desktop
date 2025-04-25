@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.Level;
+import java.util.logging.Level; 
 import java.util.logging.Logger;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
@@ -216,7 +216,7 @@ public class Login extends javax.swing.JFrame {
                 return;
             }
             
-            sql = "SELECT  f.id_funcionario, f.matricula, p.senha FROM funcionario f JOIN pessoa p on p.id_pessoa = f.id_pessoa\n" +
+            sql = "SELECT  f.id_funcionario, f.matricula, p.senha FROM funcionario f JOIN pessoas p on p.id_pessoa = f.id_pessoa\n" +
             "WHERE f.matricula = ? AND p.senha = ?;";
             stmt = con.prepareStatement(sql);
             

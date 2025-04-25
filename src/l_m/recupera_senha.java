@@ -255,13 +255,13 @@ public class recupera_senha extends javax.swing.JFrame {
         //VERIFICA SE O FUNCIONARIO EXISTE E ATUALIZA A SENHA
         try{
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT f.id_pessoa, p.email, p.senha, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+matriculaTxt.getText()+"' AND email = '"+emailTxt.getText()+"';";
+            String sql = "SELECT f.id_pessoa, p.email, p.senha, f.matricula FROM pessoas p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+matriculaTxt.getText()+"' AND email = '"+emailTxt.getText()+"';";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             
             if(rs.next()){
                 idPessoa = rs.getString("id_pessoa");
-                sql =  "UPDATE pessoa SET senha = ? WHERE id_pessoa = ?";
+                sql =  "UPDATE pessoas SET senha = ? WHERE id_pessoa = ?";
                 stmt = con.prepareStatement(sql);
                 stmt.setString(1, senhaTxt.getText());        
                 stmt.setString(2, idPessoa);
@@ -276,13 +276,13 @@ public class recupera_senha extends javax.swing.JFrame {
             }
             
             //VERIFICA SE O ADMINISTRADOR EXISTE E ATUALIZA A SENHA
-            sql = "SELECT a.id_pessoa, p.email, p.senha, a.matricula FROM pessoa p INNER JOIN administrador a ON p.id_pessoa = a.id_pessoa WHERE matricula = '"+matriculaTxt.getText()+"' AND email = '"+emailTxt.getText()+"';";
+            sql = "SELECT a.id_pessoa, p.email, p.senha, a.matricula FROM pessoas p INNER JOIN administrador a ON p.id_pessoa = a.id_pessoa WHERE matricula = '"+matriculaTxt.getText()+"' AND email = '"+emailTxt.getText()+"';";
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
             
             if(rs.next()){
                 idPessoa = rs.getString("id_pessoa");
-                sql =  "UPDATE pessoa SET senha = ? WHERE id_pessoa = ?";
+                sql =  "UPDATE pessoas SET senha = ? WHERE id_pessoa = ?";
                 stmt = con.prepareStatement(sql);
                 stmt.setString(1, senhaTxt.getText());        
                 stmt.setString(2, idPessoa);
@@ -298,7 +298,7 @@ public class recupera_senha extends javax.swing.JFrame {
                             
         }catch(SQLException ex){
             JOptionPane.showMessageDialog(null, "Não encontrado, tente novamente!");
-            Logger.getLogger(Recuperar_senha.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(recupera_senha.class.getName()).log(Level.SEVERE, null, ex);
         }
             
     }//GEN-LAST:event_btRecuperaSenha4btRecuperaSenhaMouseClicked

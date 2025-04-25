@@ -26,12 +26,21 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
         DefaultTableModel modelo = (DefaultTableModel) tabelaAssinantes.getModel();
         try {
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.id_pessoa, p.nome, p.email FROM pessoa p  JOIN assinante a ON p.id_pessoa = a.id_pessoa";
+            String sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email FROM pessoas p  JOIN autor a ON p.id_pessoa = a.id_pessoa;";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()){
-                Object [] dados = {rs.getString("id_pessoa"), rs.getString("nome"), rs.getString("email")};
+                Object [] dados = {rs.getString("nome"),"Autor",  rs.getString("pagamento")};
+                modelo.addRow(dados);
+            }
+            
+            sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email FROM pessoas p  JOIN assinante a ON p.id_pessoa = a.id_pessoa;";
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                Object [] dados = {rs.getString("nome"),"Leitor",  rs.getString("pagamento")};
                 modelo.addRow(dados);
             }
             
@@ -58,8 +67,16 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
         tabelaAssinantes = new javax.swing.JTable();
         pesquisaTxt = new javax.swing.JTextField();
         refresh = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         searchBt = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        emailTxt = new javax.swing.JTextField();
+        nomeTxt = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        numeroAssinaturaTxt = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        cancelaBt = new javax.swing.JLabel();
 
         setClosable(true);
         setIconifiable(true);
@@ -71,11 +88,11 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "ID", "Nome", "Email"
+                "Nome", "Tipo", "pagamento"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                true, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -100,9 +117,6 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Malgun Gothic", 0, 24)); // NOI18N
-        jLabel2.setText("Lista de Assinantes");
-
         searchBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/searchIcon.png"))); // NOI18N
         searchBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         searchBt.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -111,53 +125,146 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
             }
         });
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel2.setFont(new java.awt.Font("Malgun Gothic", 0, 24)); // NOI18N
+        jLabel2.setText("Assinantes");
+
+        jLabel3.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
+        jLabel3.setText("Email:");
+
+        emailTxt.setEditable(false);
+        emailTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
+        emailTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        emailTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                emailTxtActionPerformed(evt);
+            }
+        });
+
+        nomeTxt.setEditable(false);
+        nomeTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
+        nomeTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        nomeTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nomeTxtActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
+        jLabel7.setText("Nome:");
+
+        numeroAssinaturaTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
+        numeroAssinaturaTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        numeroAssinaturaTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                numeroAssinaturaTxtActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
+        jLabel4.setText("Assinatura N°:");
+
+        cancelaBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/cancelaAssinatura.png"))); // NOI18N
+        cancelaBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(92, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(22, 22, 22)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel3))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel2)
+                                .addComponent(jLabel4)))
+                        .addGap(126, 126, 126))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(cancelaBt)
+                        .addGap(62, 62, 62))))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(nomeTxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
+                        .addComponent(emailTxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
+                        .addComponent(numeroAssinaturaTxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE))
+                    .addContainerGap()))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(84, 84, 84)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(111, 111, 111)
+                .addComponent(jLabel7)
+                .addGap(64, 64, 64)
+                .addComponent(jLabel3)
+                .addGap(74, 74, 74)
+                .addComponent(jLabel4)
+                .addGap(85, 85, 85)
+                .addComponent(cancelaBt)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(262, 262, 262)
+                    .addComponent(nomeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(45, 45, 45)
+                    .addComponent(emailTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(49, 49, 49)
+                    .addComponent(numeroAssinaturaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(231, Short.MAX_VALUE)))
+        );
+
         javax.swing.GroupLayout imagemFundo1Layout = new javax.swing.GroupLayout(imagemFundo1);
         imagemFundo1.setLayout(imagemFundo1Layout);
         imagemFundo1Layout.setHorizontalGroup(
             imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(imagemFundo1Layout.createSequentialGroup()
-                .addGroup(imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(imagemFundo1Layout.createSequentialGroup()
-                        .addGroup(imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(imagemFundo1Layout.createSequentialGroup()
-                                .addGap(495, 495, 495)
-                                .addComponent(jLabel2))
-                            .addGroup(imagemFundo1Layout.createSequentialGroup()
-                                .addGap(395, 395, 395)
-                                .addComponent(pesquisaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(searchBt)))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 196, Short.MAX_VALUE)
+                .addGroup(imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, imagemFundo1Layout.createSequentialGroup()
+                        .addComponent(pesquisaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(searchBt)
                         .addGap(18, 18, 18)
                         .addComponent(refresh)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         imagemFundo1Layout.setVerticalGroup(
             imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, imagemFundo1Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
+            .addGroup(imagemFundo1Layout.createSequentialGroup()
+                .addGap(48, 48, 48)
                 .addGroup(imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(imagemFundo1Layout.createSequentialGroup()
-                        .addGroup(imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(imagemFundo1Layout.createSequentialGroup()
-                                .addComponent(pesquisaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(79, 79, 79))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, imagemFundo1Layout.createSequentialGroup()
-                                .addComponent(refresh)
-                                .addGap(75, 75, 75)))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 435, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(searchBt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(imagemFundo1Layout.createSequentialGroup()
+                            .addComponent(pesquisaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(4, 4, 4))
+                        .addComponent(refresh, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(searchBt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 596, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(imagemFundo1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(imagemFundo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(imagemFundo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -179,12 +286,21 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
             pesquisaTxt.setText("");
             modelo.setNumRows(0);
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.id_pessoa, p.nome, p.email FROM pessoa p  JOIN assinante a ON p.id_pessoa = a.id_pessoa";
+            String sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email FROM pessoas p  JOIN autor a ON p.id_pessoa = a.id_pessoa;";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()){
-                Object [] dados = {rs.getString("id_pessoa"), rs.getString("nome"), rs.getString("email")};
+                Object [] dados = {rs.getString("nome"),"Autor",  rs.getString("pagamento")};
+                modelo.addRow(dados);
+            }
+            
+            sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email FROM pessoas p  JOIN assinante a ON p.id_pessoa = a.id_pessoa;";
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                Object [] dados = {rs.getString("nome"),"Leitor",  rs.getString("pagamento")};
                 modelo.addRow(dados);
             }
             
@@ -202,13 +318,23 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
             DefaultTableModel modelo = (DefaultTableModel) tabelaAssinantes.getModel();
             modelo.setNumRows(0);
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.id_pessoa, p.nome, p.email FROM pessoa p  JOIN assinante a ON p.id_pessoa = a.id_pessoa WHERE p.nome LIKE ?;";
+            String sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email FROM pessoas p  JOIN autor a ON p.id_pessoa = a.id_pessoa WHERE p.nome LIKE ?;";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, "%"+pesquisaTxt.getText()+"%");
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()){
-                Object [] dados = {rs.getString("id_pessoa"), rs.getString("nome"), rs.getString("email")};
+                Object [] dados = {rs.getString("nome"), "Autor", rs.getString("pagamento")};
+                modelo.addRow(dados);
+            }
+            
+            sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email FROM pessoas p  JOIN assinante a ON p.id_pessoa = a.id_pessoa WHERE p.nome LIKE ?;";
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, "%"+pesquisaTxt.getText()+"%");
+            rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                Object [] dados = {rs.getString("nome"),"Leitor",  rs.getString("pagamento")};
                 modelo.addRow(dados);
             }
             
@@ -222,11 +348,31 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_searchBtMouseClicked
 
+    private void emailTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_emailTxtActionPerformed
+
+    private void nomeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nomeTxtActionPerformed
+
+    }//GEN-LAST:event_nomeTxtActionPerformed
+
+    private void numeroAssinaturaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numeroAssinaturaTxtActionPerformed
+
+    }//GEN-LAST:event_numeroAssinaturaTxtActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel cancelaBt;
+    private javax.swing.JTextField emailTxt;
     private imagemfundo.ImagemFundo imagemFundo1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField nomeTxt;
+    private javax.swing.JTextField numeroAssinaturaTxt;
     private javax.swing.JTextField pesquisaTxt;
     private javax.swing.JLabel refresh;
     private javax.swing.JLabel searchBt;

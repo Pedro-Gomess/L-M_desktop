@@ -363,7 +363,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         try{
             //VERIFICA SE USUARIO ESTA CADASTRADO
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT id_pessoa FROM pessoa WHERE email = ? AND cpf = ?";
+            String sql = "SELECT id_pessoa FROM pessoas WHERE email = ? AND cpf = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             
             stmt.setString(1,emailTxt.getText());
@@ -403,7 +403,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             }
             
             //CADASTRANDO O USUARIO
-            sql = "INSERT INTO pessoa(nome, email, cpf, senha) VALUES(?,?,?,?)";
+            sql = "INSERT INTO pessoas(nome, email, cpf, senha) VALUES(?,?,?,?)";
             stmt = con.prepareStatement(sql);
             
             stmt.setString(1,nomeTxt.getText());
@@ -420,7 +420,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         //INSERT NA TABELA FUNCIONARIO OU ADMINISTRADOR
         try{
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "INSERT INTO funcionario (matricula, id_pessoa) VALUES('"+funcaoMatricula("FUNC")+"', (SELECT id_pessoa FROM pessoa WHERE email = ? AND senha = ? AND cpf = ?));"; 
+            String sql = "INSERT INTO funcionario (matricula, id_pessoa) VALUES('"+funcaoMatricula("FUNC")+"', (SELECT id_pessoa FROM pessoas WHERE email = ? AND senha = ? AND cpf = ?));"; 
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, emailTxt.getText());
             stmt.setString(2, senhaTxt.getText()); 
@@ -450,31 +450,12 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             DefaultTableModel modelo = (DefaultTableModel) tabelaFunc.getModel();
             modelo.setNumRows(0);
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.nome, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa;";
+            String sql = "SELECT p.nome, f.matricula FROM pessoas p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa;";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()){
                 Object[] dados = {rs.getString("nome"), rs.getString("matricula"), "Funcionário"};
-                modelo.addRow(dados);
-            }
-            
-            rs.close();
-            con.close();
-            stmt.close();
-        }catch (SQLException e) {
-            Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
-        }
-        
-        try {
-                DefaultTableModel modelo = (DefaultTableModel) tabelaFunc.getModel();
-                Connection con = DataBaseConnection.conexaoBanco();
-                String sql = "SELECT p.nome, a.matricula FROM pessoa p INNER JOIN administrador a ON p.id_pessoa = a.id_pessoa;";
-                PreparedStatement stmt = con.prepareStatement(sql);
-                ResultSet rs = stmt.executeQuery();
-            
-            while(rs.next()){
-                Object[] dados = {rs.getString("nome"), rs.getString("matricula"), "Administrador"};
                 modelo.addRow(dados);
             }
             
@@ -496,7 +477,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         try {
             modelo.setNumRows(0);
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.nome, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE nome LIKE ?;";
+            String sql = "SELECT p.nome, f.matricula FROM pessoas p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE nome LIKE ?;";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, "%"+pesquisaTxt.getText()+"%");
             ResultSet rs = stmt.executeQuery();
@@ -537,7 +518,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         try {
              //VERIFICA SE USUARIO ESTA CADASTRADO
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT id_pessoa FROM pessoa WHERE email = ? AND cpf = ?";
+            String sql = "SELECT id_pessoa FROM pessoas WHERE email = ? AND cpf = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             
             stmt.setString(1,emailTxt.getText());
@@ -559,7 +540,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                 return;
             }
             
-            sql = "UPDATE pessoa SET nome = ?, email = ?, cpf = ? WHERE id_pessoa = ?;";
+            sql = "UPDATE pessoas SET nome = ?, email = ?, cpf = ? WHERE id_pessoa = ?;";
             stmt = con.prepareStatement(sql);
             stmt.setString(1, nomeTxt.getText());           
             stmt.setString(2, emailTxt.getText());
@@ -586,7 +567,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
 
         try {
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.id_pessoa, p.nome, p.email, p.cpf, f.matricula FROM pessoa p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+matriculaFunc+"';";
+            String sql = "SELECT p.id_pessoa, p.nome, p.email, p.cpf, f.matricula FROM pessoas p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+matriculaFunc+"';";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             
@@ -618,7 +599,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         try {
             //VERIFICA SE USUARIO ESTA CADASTRADO
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT id_pessoa FROM pessoa WHERE email = ? AND cpf = ?";
+            String sql = "SELECT id_pessoa FROM pessoas WHERE email = ? AND cpf = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             
             stmt.setString(1,emailTxt.getText());
@@ -640,7 +621,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             stmt = con.prepareStatement(sql);                 
             stmt.execute();
                                           
-            sql = "DELETE FROM pessoa WHERE id_pessoa = (SELECT id_pessoa WHERE  email = ? AND cpf = ?);";
+            sql = "DELETE FROM pessoas WHERE id_pessoa = (SELECT id_pessoa WHERE  email = ? AND cpf = ?);";
             stmt = con.prepareStatement(sql);
             stmt.setString(1, emailTxt.getText());                     
             stmt.setString(2, cpfTxt.getText());
