@@ -15,9 +15,9 @@ import java.sql.SQLException;
  */
 public class DataBaseConnection {
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
-    private static final String URL = "jdbc:mysql://localhost:3306/Biblioteca";
-    private static final String USER = "root";
-    private static final String PASS = "senac";
+    private static final String URL = "jdbc:mysql://biblioteca-db.cf6wmsg6kibo.sa-east-1.rds.amazonaws.com:3306/Biblioteca";
+     private static final String USER = "admin";
+     private static final String PASS = "bIbR1073ca";
 
     
     public static Connection conexaoBanco() throws SQLException {

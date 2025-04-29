@@ -85,7 +85,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
          try {
             
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "INSERT INTO livros(titulo, categoria, arquivo_path, capa_path) VALUES(?,?,?,?)";
+            String sql = "INSERT INTO livros(titulo, visualizacao, categoria, livro_file, capa_img) VALUES(?,?,?,?,?)";
             PreparedStatement stmt = con.prepareStatement(sql);
             try{
                 InputStream is = new FileInputStream(livroPdf);
@@ -95,13 +95,14 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                 while(offSet < bytes.length && (numRead = is.read(bytes, offSet, bytes.length-offSet)) >= 0){
                     offSet += numRead;
                 }
-                stmt.setString(1, tituloTxt.getText());           
-                stmt.setString(2, categoria.getSelectedItem().toString());
-                stmt.setBytes(3, bytes);
-                stmt.setString(4, getCapaCaminho());
+                stmt.setString(1, tituloAdd.getText()); 
+                stmt.setString(2, "0");
+                stmt.setString(3, categoria.getSelectedItem().toString());
+                stmt.setBytes(4, bytes);
+                stmt.setString(5, getCapaCaminho());
                 stmt.execute();
 
-                JOptionPane.showMessageDialog(null, "Livro adicionado co sucesso!");
+                JOptionPane.showMessageDialog(null, "Livro adicionado com sucesso!");
                 con.close();
                 stmt.close();
             }catch(IOException io){
