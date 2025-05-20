@@ -99,6 +99,11 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        tabelaAssinantes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaAssinantesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabelaAssinantes);
 
         pesquisaTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
@@ -359,6 +364,10 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
     private void numeroAssinaturaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numeroAssinaturaTxtActionPerformed
 
     }//GEN-LAST:event_numeroAssinaturaTxtActionPerformed
+
+    private void tabelaAssinantesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaAssinantesMouseClicked
+        
+    }//GEN-LAST:event_tabelaAssinantesMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -20,14 +20,43 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.IIOException;
+import javax.swing.JTextField;
     
 /**
  *
  * @author Pedro53722376
  */
 public class Tela_produtos extends javax.swing.JInternalFrame {
-    String capaCaminho;
+    public String livroFile;
+    public String livroImg;
+    public String capaCaminho;
     public File livroArq = null;
+
+    public String getLivroFile() {
+        return livroFile;
+    }
+
+    public void setLivroFile(String livroFile) {
+        this.livroFile = livroFile;
+    }
+
+    public String getLivroImg() {
+        return livroImg;
+    }
+
+    public void setLivroImg(String livroImg) {
+        this.livroImg = livroImg;
+    }
+
+  
+
+    public JTextField getCapaFile() {
+        return capaFile;
+    }
+
+    public void setCapaFile(JTextField capaFile) {
+        this.capaFile = capaFile;
+    }
 
     public String getCapaCaminho() {
         return capaCaminho;
@@ -47,45 +76,11 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         return ext;
     };
     
-    public File recupera(int id){
-        
-        try{
-        try{
-            Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT id_livro, titulo, arquivo_path FROM livros WHERE id_livro = ?;";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            File file = null;
-            
-            if(rs.next()){
-                byte[] bytes = rs.getBytes("arquivo_path");
-                String titulo = rs.getString("titulo");
-                
-                file = new File("C:\\Livros\\Livro\\" + titulo + ".pdf");
-                FileOutputStream fos = new FileOutputStream(file);
-                fos.write(bytes);
-                fos.close();
-            }
-            JOptionPane.showMessageDialog(null, "sucesso" + rs.getString("titulo"));
-            rs.close();
-            stmt.close();
-            con.close();
-            return file;
-        }catch(IOException io){
-            JOptionPane.showMessageDialog(null, "Arquivo não encontrado");
-        }
-        }catch(SQLException ex){
-            Logger.getLogger(Tela_produtos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-    
     public  boolean livroPDF(File livroPdf){
          try {
             
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "INSERT INTO livros(titulo, visualizacao, categoria, livro_file, capa_img) VALUES(?,?,?,?,?)";
+            String sql = "INSERT INTO livros(titulo, autor, visualizacao, categoria, livro_file, capa_img) VALUES(?,?,?,?,?,?)";
             PreparedStatement stmt = con.prepareStatement(sql);
             try{
                 InputStream is = new FileInputStream(livroPdf);
@@ -95,11 +90,12 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                 while(offSet < bytes.length && (numRead = is.read(bytes, offSet, bytes.length-offSet)) >= 0){
                     offSet += numRead;
                 }
-                stmt.setString(1, tituloAdd.getText()); 
-                stmt.setString(2, "0");
-                stmt.setString(3, categoria.getSelectedItem().toString());
-                stmt.setBytes(4, bytes);
-                stmt.setString(5, getCapaCaminho());
+                stmt.setString(1, tituloAdd.getText());                 
+                stmt.setString(2, categoriaTxt.getText()); 
+                stmt.setString(3, "0");
+                stmt.setString(4, categoriaTxt.getText());
+                stmt.setBytes(5, bytes);
+                stmt.setString(6, getCapaCaminho());
                 stmt.execute();
 
                 JOptionPane.showMessageDialog(null, "Livro adicionado com sucesso!");
@@ -123,15 +119,24 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         DefaultTableModel modelo = (DefaultTableModel) tableLivros.getModel();
         try{
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT id_livro, titulo, categoria FROM livros;";
+            String sql = "SELECT id_livro, titulo, situacao FROM livros;";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()){
-                Object [] dados = {rs.getString("id_livro"), rs.getString("titulo"), rs.getString("categoria")};
+                Object [] dados = {rs.getString("id_livro"), rs.getString("titulo"), rs.getString("situacao")};
                 modelo.addRow(dados);
             }
             
+            
+            sql = "SELECT id_livro_enviado, titulo, situacao FROM livros_enviados;";
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                Object [] dados = {rs.getString("id_livro_enviado"), rs.getString("titulo"), rs.getString("situacao")};
+                modelo.addRow(dados);
+            }
             rs.close();
             stmt.close();
             con.close();
@@ -157,18 +162,18 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         tituloAdd = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        categoria = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         addBtn = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
+        deleteBt = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         caminhoPath = new javax.swing.JTextField();
         selecionarArqBt = new javax.swing.JButton();
         capaFile = new javax.swing.JTextField();
         selecionarCapaBt = new javax.swing.JButton();
-        recuperaArq = new javax.swing.JLabel();
+        categoriaTxt = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        autorTxt1 = new javax.swing.JTextField();
         refreshBtn = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableLivros = new javax.swing.JTable();
@@ -196,6 +201,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         jLabel2.setFont(new java.awt.Font("Malgun Gothic", 0, 24)); // NOI18N
         jLabel2.setText("Produtos");
 
+        tituloAdd.setEditable(false);
         tituloAdd.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
         tituloAdd.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         tituloAdd.addActionListener(new java.awt.event.ActionListener() {
@@ -206,9 +212,6 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
 
         jLabel7.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
         jLabel7.setText("Titulo:");
-
-        categoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Romance", "Fantasia", "Ficção", "Mistério / Suspense", "Terror / Horror", "Aventura", "Drama", "Distopia", " " }));
-        categoria.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel9.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
         jLabel9.setText("Categoria:");
@@ -224,11 +227,8 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/edit.png"))); // NOI18N
-        jLabel6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/delete.png"))); // NOI18N
-        jLabel10.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        deleteBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/delete.png"))); // NOI18N
+        deleteBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         jLabel13.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
         jLabel13.setText("Selecionar capa:");
@@ -265,11 +265,24 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             }
         });
 
-        recuperaArq.setText("recuperar Arquivo");
-        recuperaArq.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        recuperaArq.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                recuperaArqMouseClicked(evt);
+        categoriaTxt.setEditable(false);
+        categoriaTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
+        categoriaTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        categoriaTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                categoriaTxtActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
+        jLabel8.setText("Autor:");
+
+        autorTxt1.setEditable(false);
+        autorTxt1.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
+        autorTxt1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        autorTxt1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                autorTxt1ActionPerformed(evt);
             }
         });
 
@@ -279,50 +292,53 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(85, 85, 85)
-                                .addComponent(jLabel13))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(caminhoPath)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(selecionarArqBt))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(121, 121, 121)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel1)
+                                    .addGap(13, 13, 13))
+                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(16, 16, 16)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(tituloAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addGap(130, 130, 130)
-                                    .addComponent(jLabel7))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(105, 105, 105)
-                                    .addComponent(jLabel9))
-                                .addComponent(tituloAdd)
-                                .addComponent(categoria, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(capaFile, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(selecionarCapaBt)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(75, 75, 75)
-                                .addComponent(jLabel12))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(105, 105, 105)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addGap(13, 13, 13))
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(25, 25, 25)
-                                .addComponent(addBtn)
-                                .addGap(77, 77, 77)
-                                .addComponent(jLabel6)
-                                .addGap(82, 82, 82)
-                                .addComponent(jLabel10)
-                                .addGap(55, 55, 55))))
+                                    .addComponent(jLabel7))))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                            .addGap(16, 16, 16)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(85, 85, 85)
+                                        .addComponent(jLabel13))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(caminhoPath)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(selecionarArqBt))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(75, 75, 75)
+                                        .addComponent(jLabel12))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(capaFile, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGap(64, 64, 64)
+                                                .addComponent(addBtn)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(deleteBt)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(selecionarCapaBt)))
+                                .addComponent(categoriaTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(autorTxt1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(115, 115, 115)
-                        .addComponent(recuperaArq)))
+                        .addGap(129, 129, 129)
+                        .addComponent(jLabel9))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(144, 144, 144)
+                        .addComponent(jLabel8)))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -337,10 +353,14 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tituloAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(autorTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8)
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(categoria, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(categoriaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8)
                 .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -354,13 +374,9 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                     .addComponent(selecionarCapaBt, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(addBtn)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel6)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)))
-                .addGap(28, 28, 28)
-                .addComponent(recuperaArq)
-                .addContainerGap(60, Short.MAX_VALUE))
+                    .addComponent(deleteBt)
+                    .addComponent(addBtn))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
 
         refreshBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/refresh.png"))); // NOI18N
@@ -377,7 +393,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "ID", " Titulo", "Categoria"
+                "ID", " Titulo", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -386,6 +402,12 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tableLivros.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        tableLivros.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableLivrosMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tableLivros);
@@ -419,9 +441,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             .addGroup(imagemFundo1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(imagemFundo1Layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(imagemFundo1Layout.createSequentialGroup()
                         .addGroup(imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tituloTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -442,9 +462,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 50, Short.MAX_VALUE)
-                .addComponent(imagemFundo1, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(imagemFundo1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
         );
 
         pack();
@@ -488,12 +506,21 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         try{
             modelo.setNumRows(0);
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT id_livro, titulo, categoria FROM livros;";
+            String sql = "SELECT id_livro, titulo, situacao FROM livros;";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()){
-                Object [] dados = {rs.getString("id_livro"), rs.getString("titulo"), rs.getString("categoria")};
+                Object [] dados = {rs.getString("id_livro"), rs.getString("titulo"), rs.getString("situacao")};
+                modelo.addRow(dados);
+            }
+            
+            sql = "SELECT id_livro_enviado, titulo, situacao FROM livros_enviados;";
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                Object [] dados = {rs.getString("id_livro_enviado"), rs.getString("titulo"), rs.getString("situacao")};
                 modelo.addRow(dados);
             }
             
@@ -561,29 +588,72 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_selecionarCapaBtMouseClicked
 
-    private void recuperaArqMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recuperaArqMouseClicked
-        recupera(1);
-    }//GEN-LAST:event_recuperaArqMouseClicked
+    private void categoriaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoriaTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_categoriaTxtActionPerformed
+
+    private void autorTxt1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autorTxt1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_autorTxt1ActionPerformed
+
+    private void tableLivrosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableLivrosMouseClicked
+        DefaultTableModel modelo = (DefaultTableModel) tableLivros.getModel();
+        String idLivro = String.valueOf(tableLivros.getValueAt(tableLivros.getSelectedRow(), 0));
+        String situacaoLivro = String.valueOf(tableLivros.getValueAt(tableLivros.getSelectedRow(), 2));
+       
+        try{
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT id_livro, titulo, autor, categoria FROM livros WHERE id_livro = '"+idLivro+"' AND situacao = '"+situacaoLivro+"';";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()){
+               tituloAdd.setText(rs.getString("titulo"));
+               autorTxt1.setText(rs.getString("autor"));
+               categoriaTxt.setText(rs.getString("categoria"));
+            }
+            
+            
+            sql = "SELECT id_livro_enviado, titulo, autor, categoria, livro_file, capa_img FROM livros_enviados WHERE id_livro_enviado = '"+idLivro+"' AND situacao = '"+situacaoLivro+"';";
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            
+            while(rs.next()){
+               tituloAdd.setText(rs.getString("titulo"));
+               autorTxt1.setText(rs.getString("autor"));
+               categoriaTxt.setText(rs.getString("categoria"));
+               setLivroFile(String.valueOf(rs.getString("livro_file")));  
+               setLivroImg(String.valueOf(rs.getString("capa_img")));
+               caminhoPath.setText("*****");
+               capaFile.setText("*****");
+            }
+            rs.close();
+            stmt.close();
+            con.close();
+        }catch(SQLException ex){
+            Logger.getLogger(Tela_produtos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_tableLivrosMouseClicked
 
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel addBtn;
+    private javax.swing.JTextField autorTxt1;
     private javax.swing.JTextField caminhoPath;
     private javax.swing.JTextField capaFile;
-    private javax.swing.JComboBox<String> categoria;
+    private javax.swing.JTextField categoriaTxt;
+    private javax.swing.JLabel deleteBt;
     private imagemfundo.ImagemFundo imagemFundo1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel recuperaArq;
     private javax.swing.JLabel refreshBtn;
     private javax.swing.JLabel searchBt;
     private javax.swing.JButton selecionarArqBt;
