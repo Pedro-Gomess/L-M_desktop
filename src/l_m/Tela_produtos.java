@@ -27,16 +27,16 @@ import javax.swing.JTextField;
  * @author Pedro53722376
  */
 public class Tela_produtos extends javax.swing.JInternalFrame {
-    public String livroFile;
+    public Byte livroFile;
     public String livroImg;
-    public String capaCaminho;
+    public File capaArq;
     public File livroArq = null;
 
-    public String getLivroFile() {
+    public Byte getLivroFile() {
         return livroFile;
     }
 
-    public void setLivroFile(String livroFile) {
+    public void setLivroFile(Byte livroFile) {
         this.livroFile = livroFile;
     }
 
@@ -57,14 +57,6 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
     public void setCapaFile(JTextField capaFile) {
         this.capaFile = capaFile;
     }
-
-    public String getCapaCaminho() {
-        return capaCaminho;
-    }
-
-    public void setCapaCaminho(String capaCaminho) {
-        this.capaCaminho = capaCaminho;
-    }
     
     
     public static String getExt(String ext){
@@ -76,7 +68,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         return ext;
     };
     
-    public  boolean livroPDF(File livroPdf){
+    public  boolean livroPDF(File livroPdf, File capaFile){
          try {
             
             Connection con = DataBaseConnection.conexaoBanco();
@@ -84,18 +76,26 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             PreparedStatement stmt = con.prepareStatement(sql);
             try{
                 InputStream is = new FileInputStream(livroPdf);
-                byte[] bytes = new byte[(int)livroPdf.length()];
+                byte[] bytesLivro = new byte[(int)livroPdf.length()];
                 int offSet = 0;
                 int numRead = 0;
-                while(offSet < bytes.length && (numRead = is.read(bytes, offSet, bytes.length-offSet)) >= 0){
+                while(offSet < bytesLivro.length && (numRead = is.read(bytesLivro, offSet, bytesLivro.length-offSet)) >= 0){
+                    offSet += numRead;
+                }
+                
+                is = new FileInputStream(capaFile);
+                byte[] bytesCapa = new byte[(int)capaFile.length()];
+                offSet = 0;
+                numRead = 0;
+                while(offSet < bytesCapa.length && (numRead = is.read(bytesCapa, offSet, bytesCapa.length-offSet)) >= 0){
                     offSet += numRead;
                 }
                 stmt.setString(1, tituloAdd.getText());                 
                 stmt.setString(2, categoriaTxt.getText()); 
                 stmt.setString(3, "0");
                 stmt.setString(4, categoriaTxt.getText());
-                stmt.setBytes(5, bytes);
-                stmt.setString(6, getCapaCaminho());
+                stmt.setBytes(5, bytesLivro);
+                stmt.setBytes(6, bytesCapa);
                 stmt.execute();
 
                 JOptionPane.showMessageDialog(null, "Livro adicionado com sucesso!");
@@ -413,6 +413,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(tableLivros);
 
         searchBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/searchIcon.png"))); // NOI18N
+        searchBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         searchBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 searchBtMouseClicked(evt);
@@ -538,12 +539,11 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Nenhum campo pode estar vazio");
             return;
         }
-        livroPDF(livroArq.getAbsoluteFile());
+        livroPDF(livroArq.getAbsoluteFile(), capaArq.getAbsoluteFile());
          
     }//GEN-LAST:event_addBtnMouseClicked
 
     private void capaFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_capaFileActionPerformed
-      
 
     }//GEN-LAST:event_capaFileActionPerformed
 
@@ -575,7 +575,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
             fc.showOpenDialog(this);
             File f = fc.getSelectedFile();
-            
+            capaArq = fc.getSelectedFile();
             if(!getExt(f.getPath()).equals("png") && !getExt(f.getPath()).equals("jpg")){
                 JOptionPane.showMessageDialog(null, "somente arquivos png ou jpg!");
                 return;
@@ -622,8 +622,8 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                tituloAdd.setText(rs.getString("titulo"));
                autorTxt1.setText(rs.getString("autor"));
                categoriaTxt.setText(rs.getString("categoria"));
-               setLivroFile(String.valueOf(rs.getString("livro_file")));  
-               setLivroImg(String.valueOf(rs.getString("capa_img")));
+               setLivroFile(rs.getByte("livro_file"));
+               setCapaCaminho(rs.getString("capa_img"));
                caminhoPath.setText("*****");
                capaFile.setText("*****");
             }

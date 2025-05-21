@@ -415,7 +415,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             stmt.close();
             con.close();
         }catch(SQLException ex){
-            JOptionPane.showMessageDialog(null, "Erro na validação de !");
+            JOptionPane.showMessageDialog(null, "Erro na validação de!");
         }   
         //INSERT NA TABELA FUNCIONARIO OU ADMINISTRADOR
         try{
