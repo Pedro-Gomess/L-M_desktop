@@ -403,7 +403,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             }
             
             //CADASTRANDO O USUARIO
-            sql = "INSERT INTO pessoas(nome, email, cpf, senha) VALUES(?,?,?,?)";
+            sql = "INSERT INTO pessoas(nome, situacao, email, cpf, senha) VALUES(?, A, ?, ?, ?)";
             stmt = con.prepareStatement(sql);
             
             stmt.setString(1,nomeTxt.getText());

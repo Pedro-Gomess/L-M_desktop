@@ -29,7 +29,7 @@ import javax.swing.JTextField;
 public class Tela_produtos extends javax.swing.JInternalFrame {
     public Byte livroFile;
     public String livroImg;
-    public File capaArq;
+    public File capaArq = null;
     public File livroArq = null;
 
     public Byte getLivroFile() {
@@ -50,14 +50,6 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
 
   
 
-    public JTextField getCapaFile() {
-        return capaFile;
-    }
-
-    public void setCapaFile(JTextField capaFile) {
-        this.capaFile = capaFile;
-    }
-    
     
     public static String getExt(String ext){
         int lastDot = ext.lastIndexOf(".");
@@ -68,11 +60,54 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         return ext;
     };
     
+    public File recuperaLivro(int id, String situacao){
+        
+        try{
+        try{
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql;
+            if(situacao.equals("Pendente")){
+                sql = "SELECT id_livro_enviado, titulo, livro_file, capa_img  FROM livros_enviados WHERE id_livro_enviado = ?;";
+            }else{
+                sql = "SELECT id_livro, titulo, livro_file, capa_img  FROM livros WHERE id_livro = ?;";
+            }
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            File file = null;
+            
+            if(rs.next()){
+                byte[] bytesLivro = rs.getBytes("livro_file");
+                String titulo = rs.getString("titulo");
+                file = new File("C:\\Livros\\Livro\\" + titulo + ".pdf");
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(bytesLivro);
+                
+                byte[] bytesCapa = rs.getBytes("capa_img");
+                file = new File("C:\\Livros\\capaLivro\\" + titulo + ".png");
+                fos = new FileOutputStream(file);
+                fos.write(bytesCapa);
+                fos.close();
+            }
+            JOptionPane.showMessageDialog(null, "Download relizado com sucesso!");
+            rs.close();
+            stmt.close();
+            con.close();
+            return file;
+        }catch(IOException io){
+            JOptionPane.showMessageDialog(null, "Arquivo não encontrado");
+        }
+        }catch(SQLException ex){
+            Logger.getLogger(Tela_produtos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     public  boolean livroPDF(File livroPdf, File capaFile){
          try {
             
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "INSERT INTO livros(titulo, autor, visualizacao, categoria, livro_file, capa_img) VALUES(?,?,?,?,?,?)";
+            String sql = "INSERT INTO livros(titulo, autor, visualizacao, categoria, livro_file, capa_img, situacao) VALUES(?,?,?,?,?,?, Ativo)";
             PreparedStatement stmt = con.prepareStatement(sql);
             try{
                 InputStream is = new FileInputStream(livroPdf);
@@ -91,7 +126,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                     offSet += numRead;
                 }
                 stmt.setString(1, tituloAdd.getText());                 
-                stmt.setString(2, categoriaTxt.getText()); 
+                stmt.setString(2, autorTxt1.getText()); 
                 stmt.setString(3, "0");
                 stmt.setString(4, categoriaTxt.getText());
                 stmt.setBytes(5, bytesLivro);
@@ -174,6 +209,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         categoriaTxt = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         autorTxt1 = new javax.swing.JTextField();
+        dowloadBt = new javax.swing.JLabel();
         refreshBtn = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableLivros = new javax.swing.JTable();
@@ -201,7 +237,6 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         jLabel2.setFont(new java.awt.Font("Malgun Gothic", 0, 24)); // NOI18N
         jLabel2.setText("Produtos");
 
-        tituloAdd.setEditable(false);
         tituloAdd.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
         tituloAdd.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         tituloAdd.addActionListener(new java.awt.event.ActionListener() {
@@ -265,7 +300,6 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             }
         });
 
-        categoriaTxt.setEditable(false);
         categoriaTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
         categoriaTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         categoriaTxt.addActionListener(new java.awt.event.ActionListener() {
@@ -277,12 +311,18 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         jLabel8.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
         jLabel8.setText("Autor:");
 
-        autorTxt1.setEditable(false);
         autorTxt1.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
         autorTxt1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         autorTxt1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 autorTxt1ActionPerformed(evt);
+            }
+        });
+
+        dowloadBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/download_icon.png"))); // NOI18N
+        dowloadBt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                dowloadBtMouseClicked(evt);
             }
         });
 
@@ -327,6 +367,8 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                                             .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addGap(64, 64, 64)
                                                 .addComponent(addBtn)
+                                                .addGap(36, 36, 36)
+                                                .addComponent(dowloadBt, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(deleteBt)))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -375,7 +417,8 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(deleteBt)
-                    .addComponent(addBtn))
+                    .addComponent(addBtn)
+                    .addComponent(dowloadBt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(87, Short.MAX_VALUE))
         );
 
@@ -539,6 +582,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Nenhum campo pode estar vazio");
             return;
         }
+        
         livroPDF(livroArq.getAbsoluteFile(), capaArq.getAbsoluteFile());
          
     }//GEN-LAST:event_addBtnMouseClicked
@@ -582,7 +626,6 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             }
             
             capaFile.setText(f.getPath());
-            setCapaCaminho(f.getPath());
             }catch(NullPointerException ex){
             JOptionPane.showMessageDialog(null, "Nenhum arquivo selecionado!");
         }
@@ -611,6 +654,8 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                tituloAdd.setText(rs.getString("titulo"));
                autorTxt1.setText(rs.getString("autor"));
                categoriaTxt.setText(rs.getString("categoria"));
+               caminhoPath.setText(rs.getString("titulo") + ".pdf");
+               capaFile.setText(rs.getString("titulo") + ".png");
             }
             
             
@@ -622,10 +667,8 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                tituloAdd.setText(rs.getString("titulo"));
                autorTxt1.setText(rs.getString("autor"));
                categoriaTxt.setText(rs.getString("categoria"));
-               setLivroFile(rs.getByte("livro_file"));
-               setCapaCaminho(rs.getString("capa_img"));
-               caminhoPath.setText("*****");
-               capaFile.setText("*****");
+               caminhoPath.setText(rs.getString("titulo") + ".pdf");
+               capaFile.setText(rs.getString("titulo") + ".png");
             }
             rs.close();
             stmt.close();
@@ -634,6 +677,12 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             Logger.getLogger(Tela_produtos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_tableLivrosMouseClicked
+
+    private void dowloadBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dowloadBtMouseClicked
+        String id =  String.valueOf(tableLivros.getValueAt(tableLivros.getSelectedRow(), 0));
+        String situacao = String.valueOf(tableLivros.getValueAt(tableLivros.getSelectedRow(), 2));
+        recuperaLivro(Integer.parseInt(id), situacao);
+    }//GEN-LAST:event_dowloadBtMouseClicked
 
     
     
@@ -644,6 +693,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
     private javax.swing.JTextField capaFile;
     private javax.swing.JTextField categoriaTxt;
     private javax.swing.JLabel deleteBt;
+    private javax.swing.JLabel dowloadBt;
     private imagemfundo.ImagemFundo imagemFundo1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
