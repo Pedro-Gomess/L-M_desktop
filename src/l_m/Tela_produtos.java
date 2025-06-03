@@ -14,13 +14,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.io.FileInputStream;
-import java.io.DataInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import javax.imageio.IIOException;
-import javax.swing.JTextField;
     
 /**
  *
@@ -66,7 +62,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         try{
             Connection con = DataBaseConnection.conexaoBanco();
             String sql;
-            if(situacao.equals("Pendente")){
+            if(situacao.equals("pendente")){
                 sql = "SELECT id_livro_enviado, titulo, livro_file, capa_img  FROM livros_enviados WHERE id_livro_enviado = ?;";
             }else{
                 sql = "SELECT id_livro, titulo, livro_file, capa_img  FROM livros WHERE id_livro = ?;";
