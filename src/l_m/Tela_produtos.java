@@ -56,43 +56,56 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         return ext;
     };
     
+    public boolean updateSituacao(String id){
+        try{
+           Connection con = DataBaseConnection.conexaoBanco();
+           String sql = "UPDATE livros_enviados SET situacao = 'Ativo' WHERE id_livro_enviado = ?";
+           PreparedStatement stmt = con.prepareStatement(sql);
+           stmt.setString(1, id);
+           stmt.execute();
+        }catch(SQLException ex){
+            Logger.getLogger(Tela_produtos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    };
+    
     public File recuperaLivro(int id, String situacao){
         
         try{
-        try{
-            Connection con = DataBaseConnection.conexaoBanco();
-            String sql;
-            if(situacao.equals("pendente")){
-                sql = "SELECT id_livro_enviado, titulo, livro_file, capa_img  FROM livros_enviados WHERE id_livro_enviado = ?;";
-            }else{
-                sql = "SELECT id_livro, titulo, livro_file, capa_img  FROM livros WHERE id_livro = ?;";
+            try{
+                Connection con = DataBaseConnection.conexaoBanco();
+                String sql;
+                if(situacao.toLowerCase().equals("pendente")){
+                    sql = "SELECT id_livro_enviado, titulo, livro_file, capa_img  FROM livros_enviados WHERE id_livro_enviado = ?;";
+                }else{
+                    sql = "SELECT id_livro, titulo, livro_file, capa_img  FROM livros WHERE id_livro = ?;";
+                }
+                PreparedStatement stmt = con.prepareStatement(sql);
+                stmt.setInt(1, id);
+                ResultSet rs = stmt.executeQuery();
+                File file = null;
+
+                if(rs.next()){
+                    byte[] bytesLivro = rs.getBytes("livro_file");
+                    String titulo = rs.getString("titulo");
+                    file = new File("C:\\Livros\\Livro\\" + titulo + ".pdf");
+                    FileOutputStream fos = new FileOutputStream(file);
+                    fos.write(bytesLivro);
+
+                    byte[] bytesCapa = rs.getBytes("capa_img");
+                    file = new File("C:\\Livros\\capaLivro\\" + titulo + ".png");
+                    fos = new FileOutputStream(file);
+                    fos.write(bytesCapa);
+                    fos.close();
+                }
+                JOptionPane.showMessageDialog(null, "Download relizado com sucesso!");
+                rs.close();
+                stmt.close();
+                con.close();
+                return file;
+            }catch(IOException io){
+                JOptionPane.showMessageDialog(null, "Arquivo não encontrado");
             }
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            File file = null;
-            
-            if(rs.next()){
-                byte[] bytesLivro = rs.getBytes("livro_file");
-                String titulo = rs.getString("titulo");
-                file = new File("C:\\Livros\\Livro\\" + titulo + ".pdf");
-                FileOutputStream fos = new FileOutputStream(file);
-                fos.write(bytesLivro);
-                
-                byte[] bytesCapa = rs.getBytes("capa_img");
-                file = new File("C:\\Livros\\capaLivro\\" + titulo + ".png");
-                fos = new FileOutputStream(file);
-                fos.write(bytesCapa);
-                fos.close();
-            }
-            JOptionPane.showMessageDialog(null, "Download relizado com sucesso!");
-            rs.close();
-            stmt.close();
-            con.close();
-            return file;
-        }catch(IOException io){
-            JOptionPane.showMessageDialog(null, "Arquivo não encontrado");
-        }
         }catch(SQLException ex){
             Logger.getLogger(Tela_produtos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -103,8 +116,9 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
          try {
             
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "INSERT INTO livros(titulo, autor, visualizacao, categoria, livro_file, capa_img, situacao) VALUES(?,?,?,?,?,?, Ativo)";
+            String sql = "INSERT INTO livros(titulo, autor, visualizacao, categoria, livro_file, capa_img, situacao) VALUES(?,?,?,?,?,?,?)";
             PreparedStatement stmt = con.prepareStatement(sql);
+            
             try{
                 InputStream is = new FileInputStream(livroPdf);
                 byte[] bytesLivro = new byte[(int)livroPdf.length()];
@@ -127,6 +141,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                 stmt.setString(4, categoriaTxt.getText());
                 stmt.setBytes(5, bytesLivro);
                 stmt.setBytes(6, bytesCapa);
+                stmt.setString(7, "Ativo");
                 stmt.execute();
 
                 JOptionPane.showMessageDialog(null, "Livro adicionado com sucesso!");
@@ -160,7 +175,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             }
             
             
-            sql = "SELECT id_livro_enviado, titulo, situacao FROM livros_enviados;";
+            sql = "SELECT id_livro_enviado, titulo, situacao FROM livros_enviados WHERE situacao = 'pendente';";
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
             
@@ -555,7 +570,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                 modelo.addRow(dados);
             }
             
-            sql = "SELECT id_livro_enviado, titulo, situacao FROM livros_enviados;";
+            sql = "SELECT id_livro_enviado, titulo, situacao FROM livros_enviados WHERE situacao = 'pendente';";
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
             
@@ -578,7 +593,8 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Nenhum campo pode estar vazio");
             return;
         }
-        
+        String idLivro = String.valueOf(tableLivros.getValueAt(tableLivros.getSelectedRow(), 0));
+        updateSituacao(idLivro);
         livroPDF(livroArq.getAbsoluteFile(), capaArq.getAbsoluteFile());
          
     }//GEN-LAST:event_addBtnMouseClicked
@@ -653,7 +669,6 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                caminhoPath.setText(rs.getString("titulo") + ".pdf");
                capaFile.setText(rs.getString("titulo") + ".png");
             }
-            
             
             sql = "SELECT id_livro_enviado, titulo, autor, categoria, livro_file, capa_img FROM livros_enviados WHERE id_livro_enviado = '"+idLivro+"' AND situacao = '"+situacaoLivro+"';";
             stmt = con.prepareStatement(sql);
