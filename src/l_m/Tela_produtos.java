@@ -275,6 +275,11 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
 
         deleteBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/delete.png"))); // NOI18N
         deleteBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        deleteBt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                deleteBtMouseClicked(evt);
+            }
+        });
 
         jLabel13.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
         jLabel13.setText("Selecionar capa:");
@@ -593,8 +598,10 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Nenhum campo pode estar vazio");
             return;
         }
-        String idLivro = String.valueOf(tableLivros.getValueAt(tableLivros.getSelectedRow(), 0));
-        updateSituacao(idLivro);
+        if(tableLivros.isRowSelected(tableLivros.getSelectedRow())){
+            String idLivro = String.valueOf(tableLivros.getValueAt(tableLivros.getSelectedRow(), 0));
+            updateSituacao(idLivro);
+        };
         livroPDF(livroArq.getAbsoluteFile(), capaArq.getAbsoluteFile());
          
     }//GEN-LAST:event_addBtnMouseClicked
@@ -694,6 +701,47 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         String situacao = String.valueOf(tableLivros.getValueAt(tableLivros.getSelectedRow(), 2));
         recuperaLivro(Integer.parseInt(id), situacao);
     }//GEN-LAST:event_dowloadBtMouseClicked
+
+    private void deleteBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteBtMouseClicked
+          DefaultTableModel modelo = (DefaultTableModel) tableLivros.getModel();
+        try{
+            String idLivro = String.valueOf(tableLivros.getValueAt(tableLivros.getSelectedRow(), 0));
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT id_livro, titulo, situacao FROM livros WHERE id_livro = ?;";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, idLivro);
+            stmt.execute();
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                              
+                sql = "DELETE FROM livros WHERE id_livro = ?";
+                stmt = con.prepareStatement(sql);
+                stmt.setString(1, idLivro);
+                stmt.execute(); 
+            }
+            
+            sql = "SELECT id_livro_enviado, titulo, situacao FROM livros_enviados WHERE situacao = 'pendente';";
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                    
+                sql = "DELETE FROM livros_enviados WHERE id_livro_enviado = ?";
+                stmt = con.prepareStatement(sql);
+                stmt.setString(1, rs.getString("id_livro_enviado"));
+                
+            }
+            stmt.execute(); 
+            
+            JOptionPane.showMessageDialog(null, "Livro excluido com sucesso!");
+            rs.close();
+            stmt.close();
+            con.close();
+        }catch(SQLException ex){
+            Logger.getLogger(Tela_produtos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_deleteBtMouseClicked
 
     
     

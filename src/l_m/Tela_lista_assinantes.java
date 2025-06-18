@@ -172,6 +172,11 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
 
         cancelaBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/cancelaAssinatura.png"))); // NOI18N
         cancelaBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        cancelaBt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cancelaBtMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -368,6 +373,10 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
     private void tabelaAssinantesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaAssinantesMouseClicked
         
     }//GEN-LAST:event_tabelaAssinantesMouseClicked
+
+    private void cancelaBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelaBtMouseClicked
+         // TODO add your handling code here:
+    }//GEN-LAST:event_cancelaBtMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

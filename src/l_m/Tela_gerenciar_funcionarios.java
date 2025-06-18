@@ -403,7 +403,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             }
             
             //CADASTRANDO O USUARIO
-            sql = "INSERT INTO pessoas(nome, situacao, email, cpf, senha) VALUES(?, A, ?, ?, ?)";
+            sql = "INSERT INTO pessoas(nome, situacao, email, cpf, senha) VALUES(?, 'A', ?, ?, ?)";
             stmt = con.prepareStatement(sql);
             
             stmt.setString(1,nomeTxt.getText());
@@ -605,7 +605,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             stmt.setString(1,emailTxt.getText());
             stmt.setString(2,cpfTxt.getText());
             ResultSet rs = stmt.executeQuery();                 
-            
+                             
             if(!rs.next()){
                 JOptionPane.showMessageDialog(null, "Usuario não encontrado!");
                 
@@ -615,16 +615,17 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                 senhaTxt.setText(null);
                 return;
             }
-
-            sql = "DELETE FROM funcionario WHERE id_pessoa = ?";
-            stmt.setString(1, idPessoa);
-            stmt = con.prepareStatement(sql);                 
+            
+            idPessoa = rs.getString("id_pessoa");
+            
+            sql = "DELETE FROM funcionario WHERE id_pessoa = ?;";
+            stmt = con.prepareStatement(sql);  
+            stmt.setString(1, idPessoa);                     
             stmt.execute();
                                           
-            sql = "DELETE FROM pessoas WHERE id_pessoa = (SELECT id_pessoa WHERE  email = ? AND cpf = ?);";
+            sql = "DELETE FROM pessoas WHERE id_pessoa = ?;";
             stmt = con.prepareStatement(sql);
-            stmt.setString(1, emailTxt.getText());                     
-            stmt.setString(2, cpfTxt.getText());
+            stmt.setString(1, idPessoa);
             stmt.execute();
             
             JOptionPane.showMessageDialog(null,"Deletado com sucesso");
