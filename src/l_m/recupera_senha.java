@@ -28,6 +28,9 @@ public class recupera_senha extends javax.swing.JFrame {
      */
     public recupera_senha() {
         initComponents();
+        setSize(800, 600);
+        setResizable(false);
+        setLocationRelativeTo(null); 
     }
 
     /**
@@ -132,45 +135,48 @@ public class recupera_senha extends javax.swing.JFrame {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(emailTxt)
-                    .addComponent(matriculaTxt)
-                    .addComponent(senhaTxt))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel24)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(emailTxt)
+                            .addComponent(matriculaTxt)
+                            .addComponent(senhaTxt)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addComponent(jLabel23)
+                                .addGap(132, 132, 132))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addComponent(jLabel25)
+                                .addGap(131, 131, 131))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addComponent(jLabel22)
+                                .addGap(112, 112, 112)))
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel23)
-                        .addGap(138, 138, 138))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel25)
-                        .addGap(137, 137, 137))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel22)
-                        .addGap(118, 118, 118))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addComponent(btRecuperaSenha4)
-                        .addGap(81, 81, 81))))
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(119, 119, 119)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(loginBt)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addComponent(jLabel24)
+                                .addContainerGap())
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btRecuperaSenha4, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel5Layout.createSequentialGroup()
+                                        .addGap(36, 36, 36)
+                                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                                .addGap(21, 21, 21)
+                                                .addComponent(loginBt)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(78, 78, 78))))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel22)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(matriculaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -182,13 +188,13 @@ public class recupera_senha extends javax.swing.JFrame {
                 .addComponent(jLabel23)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(senhaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(68, 68, 68)
+                .addGap(34, 34, 34)
                 .addComponent(btRecuperaSenha4)
                 .addGap(13, 13, 13)
                 .addComponent(loginBt)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(197, 197, 197))
+                .addGap(263, 263, 263))
         );
 
         javax.swing.GroupLayout imagemFundo5Layout = new javax.swing.GroupLayout(imagemFundo5);
@@ -198,46 +204,37 @@ public class recupera_senha extends javax.swing.JFrame {
             .addGroup(imagemFundo5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel21)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 154, Short.MAX_VALUE)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 160, Short.MAX_VALUE)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         imagemFundo5Layout.setVerticalGroup(
             imagemFundo5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(imagemFundo5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(619, Short.MAX_VALUE))
-            .addGroup(imagemFundo5Layout.createSequentialGroup()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 659, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 665, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(imagemFundo5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(imagemFundo5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(imagemFundo5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(imagemFundo5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void matriculaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matriculaTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_matriculaTxtActionPerformed
-
-    private void senhaTxtsenhaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_senhaTxtsenhaTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_senhaTxtsenhaTxtActionPerformed
-
-    private void emailTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_emailTxtActionPerformed
+    private void loginBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginBtMouseClicked
+        Login l = new Login();
+        l.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_loginBtMouseClicked
 
     private void btRecuperaSenha4btRecuperaSenhaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btRecuperaSenha4btRecuperaSenhaMouseClicked
         // VERIFICACAO PARA CAMPOS EM BRANCO
@@ -258,56 +255,62 @@ public class recupera_senha extends javax.swing.JFrame {
             String sql = "SELECT f.id_pessoa, p.email, p.senha, f.matricula FROM pessoas p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+matriculaTxt.getText()+"' AND email = '"+emailTxt.getText()+"';";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
-            
+
             if(rs.next()){
                 idPessoa = rs.getString("id_pessoa");
                 sql =  "UPDATE pessoas SET senha = ? WHERE id_pessoa = ?";
                 stmt = con.prepareStatement(sql);
-                stmt.setString(1, senhaTxt.getText());        
+                stmt.setString(1, senhaTxt.getText());
                 stmt.setString(2, idPessoa);
                 stmt.execute();
                 JOptionPane.showMessageDialog(null, "Senha atualizada com scesso");
-   
+
                 con.close();
                 stmt.close();
                 rs.close();
-                
+
                 return;
             }
-            
+
             //VERIFICA SE O ADMINISTRADOR EXISTE E ATUALIZA A SENHA
             sql = "SELECT a.id_pessoa, p.email, p.senha, a.matricula FROM pessoas p INNER JOIN administrador a ON p.id_pessoa = a.id_pessoa WHERE matricula = '"+matriculaTxt.getText()+"' AND email = '"+emailTxt.getText()+"';";
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
-            
+
             if(rs.next()){
                 idPessoa = rs.getString("id_pessoa");
                 sql =  "UPDATE pessoas SET senha = ? WHERE id_pessoa = ?";
                 stmt = con.prepareStatement(sql);
-                stmt.setString(1, senhaTxt.getText());        
+                stmt.setString(1, senhaTxt.getText());
                 stmt.setString(2, idPessoa);
                 stmt.execute();
                 JOptionPane.showMessageDialog(null, "Senha atualizada com scesso");
-                
+
                 con.close();
                 stmt.close();
                 rs.close();
-                
+
                 return;
             }
-                            
+
         }catch(SQLException ex){
             JOptionPane.showMessageDialog(null, "Não encontrado, tente novamente!");
             Logger.getLogger(recupera_senha.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
+
     }//GEN-LAST:event_btRecuperaSenha4btRecuperaSenhaMouseClicked
 
-    private void loginBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginBtMouseClicked
-        Login l = new Login();
-        l.setVisible(true);
-        dispose();
-    }//GEN-LAST:event_loginBtMouseClicked
+    private void emailTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_emailTxtActionPerformed
+
+    private void senhaTxtsenhaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_senhaTxtsenhaTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_senhaTxtsenhaTxtActionPerformed
+
+    private void matriculaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matriculaTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_matriculaTxtActionPerformed
 
     /**
      * @param args the command line arguments

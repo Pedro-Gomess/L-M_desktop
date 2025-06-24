@@ -17,12 +17,23 @@ import javax.swing.JOptionPane;
  * @author Pedro53722376
  */
 public class Login extends javax.swing.JFrame {
-
+    
+    public Boolean redirecionamento(boolean next, String id_pessoa){
+        Home home = new Home();
+        home.setVisible(true);
+        home.setIdPessoa(id_pessoa);
+        dispose();
+        JOptionPane.showMessageDialog(null,"caiu na func");
+        return null;
+    };
     /**
      * Creates new form Login
      */
     public Login() {
         initComponents();
+        setSize(800, 600);
+        setResizable(false);
+        setLocationRelativeTo(null); 
         imagemFundo1.setImg(new ImageIcon(getClass().getResource("/imgs/background.png")));
     }
 
@@ -132,7 +143,7 @@ public class Login extends javax.swing.JFrame {
             painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelLayout.createSequentialGroup()
                 .addComponent(imagemFundo2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
                 .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(painelLayout.createSequentialGroup()
                         .addComponent(senhaTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
@@ -210,10 +221,7 @@ public class Login extends javax.swing.JFrame {
             ResultSet rs = stmt.executeQuery();
 
             if(rs.next()){
-                Home home = new Home();
-                home.setVisible(true);
-                home.setIdPessoa(rs.getString("id_pessoa"));
-                return;
+                redirecionamento(true, rs.getString("id_pessoa"));
             }
             
             sql = "SELECT  f.id_funcionario, f.matricula, p.senha FROM funcionario f JOIN pessoas p on p.id_pessoa = f.id_pessoa\n" +
@@ -225,9 +233,7 @@ public class Login extends javax.swing.JFrame {
             rs = stmt.executeQuery();
 
             if(rs.next()){
-                Home home = new Home();
-                home.setVisible(true);
-                dispose();
+                redirecionamento(true, rs.getString("id_pessoa"));
                 return;
             }
             

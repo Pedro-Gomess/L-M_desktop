@@ -5,7 +5,7 @@
 package l_m;
 
 /**
- *
+ * 
  * @author Pedro53722376
  */
 public class Initializer {

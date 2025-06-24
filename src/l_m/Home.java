@@ -26,6 +26,9 @@ public class Home extends javax.swing.JFrame {
      */
     public Home() {
         initComponents();
+        setSize(1368, 768);
+        setResizable(false);
+        setLocationRelativeTo(null); 
         imagemFundo1.setImg(new ImageIcon(getClass().getResource("/imgs/background.png")));
     }
 
@@ -49,6 +52,7 @@ public class Home extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         painel.setBackground(new java.awt.Color(255, 255, 255));
+        painel.setPreferredSize(new java.awt.Dimension(1366, 768));
 
         imagemFundo1.setPreferredSize(new java.awt.Dimension(1220, 800));
 
@@ -92,7 +96,7 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(233, 233, 233)
                 .addComponent(telaAssinantesBt)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 239, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 385, Short.MAX_VALUE)
                 .addComponent(telaProdutosBt)
                 .addGap(265, 265, 265)
                 .addComponent(telaFuncionarioBt)
@@ -121,7 +125,7 @@ public class Home extends javax.swing.JFrame {
             imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(imagemFundo1Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 680, Short.MAX_VALUE))
+                .addGap(0, 664, Short.MAX_VALUE))
         );
 
         painel.setLayer(imagemFundo1, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -130,15 +134,12 @@ public class Home extends javax.swing.JFrame {
         painel.setLayout(painelLayout);
         painelLayout.setHorizontalGroup(
             painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(imagemFundo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(imagemFundo1, javax.swing.GroupLayout.DEFAULT_SIZE, 1366, Short.MAX_VALUE)
         );
         painelLayout.setVerticalGroup(
             painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelLayout.createSequentialGroup()
-                .addComponent(imagemFundo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(imagemFundo1, javax.swing.GroupLayout.PREFERRED_SIZE, 784, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -146,11 +147,11 @@ public class Home extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(painel)
+            .addComponent(painel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(painel)
+            .addComponent(painel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();

@@ -37,6 +37,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
      */
     public Tela_gerenciar_funcionarios() {
         initComponents();
+
         //impede que o usuario mova colunas nas tabelas
         tabelaFunc.getTableHeader().setReorderingAllowed(false);
         //Exibe os itens do BD assim que se inicia a tela 
@@ -97,6 +98,9 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
+        setMaximumSize(new java.awt.Dimension(1288, 736));
+        setMinimumSize(new java.awt.Dimension(1288, 736));
+        setPreferredSize(new java.awt.Dimension(1288, 736));
 
         refreshBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/refresh.png"))); // NOI18N
         refreshBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -252,7 +256,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                         .addComponent(addBt)
                         .addComponent(editBt, javax.swing.GroupLayout.Alignment.TRAILING))
                     .addComponent(deleteBt, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tabelaFunc.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -309,8 +313,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                         .addComponent(search)
                         .addGap(18, 18, 18)
                         .addComponent(refreshBt))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 482, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -322,7 +325,8 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
                     .addComponent(refreshBt)
                     .addComponent(search))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 607, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -334,9 +338,8 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
