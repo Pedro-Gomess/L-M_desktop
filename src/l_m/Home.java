@@ -20,7 +20,13 @@ public class Home extends javax.swing.JFrame {
     public void setIdPessoa(String idPessoa) {
         this.idPessoa = idPessoa;
     }
-
+    
+      public void redirecionamento(){
+        Login login = new Login();
+        login.setVisible(true);
+        dispose();
+    };
+    
     /**
      * Creates new form Tela_inicial
      */
@@ -48,6 +54,7 @@ public class Home extends javax.swing.JFrame {
         telaAssinantesBt = new javax.swing.JLabel();
         telaProdutosBt = new javax.swing.JLabel();
         telaFuncionarioBt = new javax.swing.JLabel();
+        exit = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -87,6 +94,14 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
+        exit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/exitAcount.png"))); // NOI18N
+        exit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        exit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                exitMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -96,11 +111,13 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(233, 233, 233)
                 .addComponent(telaAssinantesBt)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 385, Short.MAX_VALUE)
+                .addGap(307, 307, 307)
                 .addComponent(telaProdutosBt)
-                .addGap(265, 265, 265)
+                .addGap(257, 257, 257)
                 .addComponent(telaFuncionarioBt)
-                .addGap(187, 187, 187))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 212, Short.MAX_VALUE)
+                .addComponent(exit)
+                .addGap(39, 39, 39))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,7 +127,8 @@ public class Home extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(telaAssinantesBt)
                         .addComponent(telaProdutosBt)
-                        .addComponent(telaFuncionarioBt))
+                        .addComponent(telaFuncionarioBt)
+                        .addComponent(exit))
                     .addComponent(jLabel1))
                 .addContainerGap(44, Short.MAX_VALUE))
         );
@@ -180,6 +198,10 @@ public class Home extends javax.swing.JFrame {
         TGF.setVisible(true);
     }//GEN-LAST:event_telaFuncionarioBtMouseClicked
 
+    private void exitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitMouseClicked
+        redirecionamento();
+    }//GEN-LAST:event_exitMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -217,6 +239,7 @@ public class Home extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel exit;
     private imagemfundo.ImagemFundo imagemFundo1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

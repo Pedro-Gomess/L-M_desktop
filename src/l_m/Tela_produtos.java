@@ -44,7 +44,42 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         this.livroImg = livroImg;
     }
 
-  
+    public void refresh(){
+                DefaultTableModel modelo = (DefaultTableModel) tableLivros.getModel();
+        try{
+            modelo.setNumRows(0);
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT id_livro, titulo, situacao FROM livros;";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                Object [] dados = {rs.getString("id_livro"), rs.getString("titulo"), rs.getString("situacao")};
+                modelo.addRow(dados);
+            }
+            
+            sql = "SELECT id_livro_enviado, titulo, situacao FROM livros_enviados WHERE situacao = 'pendente';";
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                Object [] dados = {rs.getString("id_livro_enviado"), rs.getString("titulo"), rs.getString("situacao")};
+                modelo.addRow(dados);
+            }
+            
+            rs.close();
+            stmt.close();
+            con.close();
+        }catch(SQLException ex){
+            Logger.getLogger(Tela_produtos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        tituloAdd.setText(null);    
+        autorTxt1.setText(null);
+        categoriaTxt.setText(null);
+        caminhoPath.setText(null);
+        capaFile.setText(null);
+    };
 
     
     public static String getExt(String ext){
@@ -161,6 +196,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
      */
     public Tela_produtos() {
         initComponents();
+        
         tableLivros.getTableHeader().setReorderingAllowed(false);
         DefaultTableModel modelo = (DefaultTableModel) tableLivros.getModel();
         try{
@@ -229,8 +265,8 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
-        setMaximumSize(new java.awt.Dimension(1288, 736));
-        setMinimumSize(new java.awt.Dimension(1288, 736));
+        setMaximumSize(new java.awt.Dimension(1200, 700));
+        setMinimumSize(new java.awt.Dimension(1200, 700));
 
         imagemFundo1.setPreferredSize(new java.awt.Dimension(1200, 720));
 
@@ -357,41 +393,42 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                                     .addComponent(jLabel1)
                                     .addGap(13, 13, 13))
                                 .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(16, 16, 16)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(tituloAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(130, 130, 130)
-                                    .addComponent(jLabel7))))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                             .addGap(16, 16, 16)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(85, 85, 85)
-                                        .addComponent(jLabel13))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(caminhoPath)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(selecionarArqBt))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(75, 75, 75)
-                                        .addComponent(jLabel12))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(capaFile, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGap(64, 64, 64)
-                                                .addComponent(addBtn)
-                                                .addGap(36, 36, 36)
-                                                .addComponent(dowloadBt, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(deleteBt)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(selecionarCapaBt)))
-                                .addComponent(categoriaTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(autorTxt1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(85, 85, 85)
+                                    .addComponent(jLabel13))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(caminhoPath)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(selecionarArqBt))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(75, 75, 75)
+                                    .addComponent(jLabel12))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(capaFile, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addGap(64, 64, 64)
+                                            .addComponent(addBtn)
+                                            .addGap(36, 36, 36)
+                                            .addComponent(dowloadBt, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(deleteBt)))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(selecionarCapaBt))))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(16, 16, 16)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(autorTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel7)
+                                    .addGap(98, 98, 98))
+                                .addComponent(tituloAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(16, 16, 16)
+                            .addComponent(categoriaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(129, 129, 129)
                         .addComponent(jLabel9))
@@ -436,7 +473,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                     .addComponent(deleteBt)
                     .addComponent(addBtn)
                     .addComponent(dowloadBt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(97, Short.MAX_VALUE))
+                .addContainerGap(107, Short.MAX_VALUE))
         );
 
         refreshBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/refresh.png"))); // NOI18N
@@ -486,7 +523,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(imagemFundo1Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 319, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 329, Short.MAX_VALUE)
                 .addGroup(imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, imagemFundo1Layout.createSequentialGroup()
                         .addComponent(tituloTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -518,11 +555,11 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(imagemFundo1, javax.swing.GroupLayout.DEFAULT_SIZE, 1223, Short.MAX_VALUE)
+            .addComponent(imagemFundo1, javax.swing.GroupLayout.DEFAULT_SIZE, 1233, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(imagemFundo1, javax.swing.GroupLayout.DEFAULT_SIZE, 731, Short.MAX_VALUE)
+            .addComponent(imagemFundo1, javax.swing.GroupLayout.DEFAULT_SIZE, 741, Short.MAX_VALUE)
         );
 
         pack();
@@ -562,35 +599,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_searchBtMouseClicked
 
     private void refreshBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshBtnMouseClicked
-         DefaultTableModel modelo = (DefaultTableModel) tableLivros.getModel();
-        try{
-            modelo.setNumRows(0);
-            Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT id_livro, titulo, situacao FROM livros;";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            
-            while(rs.next()){
-                Object [] dados = {rs.getString("id_livro"), rs.getString("titulo"), rs.getString("situacao")};
-                modelo.addRow(dados);
-            }
-            
-            sql = "SELECT id_livro_enviado, titulo, situacao FROM livros_enviados WHERE situacao = 'pendente';";
-            stmt = con.prepareStatement(sql);
-            rs = stmt.executeQuery();
-            
-            while(rs.next()){
-                Object [] dados = {rs.getString("id_livro_enviado"), rs.getString("titulo"), rs.getString("situacao")};
-                modelo.addRow(dados);
-            }
-            
-            rs.close();
-            stmt.close();
-            con.close();
-        }catch(SQLException ex){
-            Logger.getLogger(Tela_produtos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        refresh();
     }//GEN-LAST:event_refreshBtnMouseClicked
 /*    */
     private void addBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addBtnMouseClicked
@@ -603,6 +612,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             updateSituacao(idLivro);
         };
         livroPDF(livroArq.getAbsoluteFile(), capaArq.getAbsoluteFile());
+        refresh(    );
          
     }//GEN-LAST:event_addBtnMouseClicked
 
@@ -697,13 +707,21 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_tableLivrosMouseClicked
 
     private void dowloadBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dowloadBtMouseClicked
+        if(tituloAdd.getText().isBlank() || caminhoPath.getText().isBlank() || capaFile.getText().isBlank()){
+            JOptionPane.showMessageDialog(null, "Nenhum campo pode estar vazio");
+            return;
+        }
         String id =  String.valueOf(tableLivros.getValueAt(tableLivros.getSelectedRow(), 0));
         String situacao = String.valueOf(tableLivros.getValueAt(tableLivros.getSelectedRow(), 2));
         recuperaLivro(Integer.parseInt(id), situacao);
     }//GEN-LAST:event_dowloadBtMouseClicked
 
     private void deleteBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteBtMouseClicked
-          DefaultTableModel modelo = (DefaultTableModel) tableLivros.getModel();
+         if(tituloAdd.getText().isBlank() || caminhoPath.getText().isBlank() || capaFile.getText().isBlank()){
+            JOptionPane.showMessageDialog(null, "Nenhum campo pode estar vazio");
+            return;
+        }
+        DefaultTableModel modelo = (DefaultTableModel) tableLivros.getModel();
         try{
             String idLivro = String.valueOf(tableLivros.getValueAt(tableLivros.getSelectedRow(), 0));
             Connection con = DataBaseConnection.conexaoBanco();

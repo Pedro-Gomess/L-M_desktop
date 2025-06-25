@@ -18,12 +18,11 @@ import javax.swing.JOptionPane;
  */
 public class Login extends javax.swing.JFrame {
     
-    public Boolean redirecionamento(boolean next, String id_pessoa){
+    public String redirecionamento(String id_pessoa){
         Home home = new Home();
         home.setVisible(true);
         home.setIdPessoa(id_pessoa);
         dispose();
-        JOptionPane.showMessageDialog(null,"caiu na func");
         return null;
     };
     /**
@@ -221,7 +220,8 @@ public class Login extends javax.swing.JFrame {
             ResultSet rs = stmt.executeQuery();
 
             if(rs.next()){
-                redirecionamento(true, rs.getString("id_pessoa"));
+                redirecionamento(rs.getString("id_pessoa")); 
+                return;
             }
             
             sql = "SELECT  f.id_funcionario, f.matricula, p.senha FROM funcionario f JOIN pessoas p on p.id_pessoa = f.id_pessoa\n" +
@@ -233,7 +233,7 @@ public class Login extends javax.swing.JFrame {
             rs = stmt.executeQuery();
 
             if(rs.next()){
-                redirecionamento(true, rs.getString("id_pessoa"));
+                redirecionamento("");
                 return;
             }
             

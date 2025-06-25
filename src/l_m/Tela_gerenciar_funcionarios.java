@@ -18,6 +18,36 @@ import java.util.regex.Pattern;
  */
 public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     String idPessoa;
+    
+    //FUNCAO REFRESH
+    
+    public void refresh(){
+        nomeTxt.setText(null);
+        emailTxt.setText(null);
+        cpfTxt.setText(null);
+        senhaTxt.setText(null);
+
+        // Exibe os itens do BD assim que se inicia a tela 
+        try {
+            DefaultTableModel modelo = (DefaultTableModel) tabelaFunc.getModel();
+            modelo.setNumRows(0);
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT p.nome, f.matricula FROM pessoas p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa;";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                Object[] dados = {rs.getString("nome"), rs.getString("matricula"), "Funcionário"};
+                modelo.addRow(dados);
+            }
+            
+            rs.close();
+            con.close();
+            stmt.close();
+        }catch (SQLException e) {
+            Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
+        }
+    };
 
     //FUNCAO PARA VERIFICAR SE EMAIL E VALIDO
     public static final String EMAIL_REGEX  = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
@@ -97,9 +127,8 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
-        setResizable(true);
-        setMaximumSize(new java.awt.Dimension(1288, 736));
-        setMinimumSize(new java.awt.Dimension(1288, 736));
+        setMaximumSize(new java.awt.Dimension(1200, 700));
+        setMinimumSize(new java.awt.Dimension(1200, 700));
         setPreferredSize(new java.awt.Dimension(1288, 736));
 
         refreshBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/refresh.png"))); // NOI18N
@@ -432,42 +461,14 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             
             JOptionPane.showMessageDialog(null,"cadastrado concluido");
                         
-            nomeTxt.setText(null);
-            emailTxt.setText(null);
-            cpfTxt.setText(null);
-            senhaTxt.setText(null);
+            refresh();
         }catch(SQLException ex){
             Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_addBtMouseClicked
     //botão refresh 
     private void refreshBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshBtMouseClicked
-        
-        nomeTxt.setText(null);
-        emailTxt.setText(null);
-        cpfTxt.setText(null);
-        senhaTxt.setText(null);
-
-        // Exibe os itens do BD assim que se inicia a tela 
-        try {
-            DefaultTableModel modelo = (DefaultTableModel) tabelaFunc.getModel();
-            modelo.setNumRows(0);
-            Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.nome, f.matricula FROM pessoas p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa;";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            
-            while(rs.next()){
-                Object[] dados = {rs.getString("nome"), rs.getString("matricula"), "Funcionário"};
-                modelo.addRow(dados);
-            }
-            
-            rs.close();
-            con.close();
-            stmt.close();
-        }catch (SQLException e) {
-            Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
-        }
+        refresh();
         
     }//GEN-LAST:event_refreshBtMouseClicked
 
@@ -552,11 +553,8 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             stmt.execute();
             
             JOptionPane.showMessageDialog(null,"Funcionario atualizado com sucesso");
-            
-            nomeTxt.setText(null);
-            emailTxt.setText(null);
-            cpfTxt.setText(null);
-            senhaTxt.setText(null);
+            refresh();
+    
             rs.close();
             con.close();
             stmt.close();
