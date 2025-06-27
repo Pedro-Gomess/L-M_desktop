@@ -11,13 +11,25 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
  * @author Pedro53722376
  */
-public class Login extends javax.swing.JFrame {
+public class Login extends javax.swing.JFrame {     
+    //FUNCAO HASH DE SENHA
     
+    public static String recupera_hash(String senha_hash, String senha_digitada){
+        boolean senhaIscorrect = BCrypt.checkpw(senha_digitada, senha_hash);
+        if(senhaIscorrect){
+            JOptionPane.showMessageDialog(null, "senhas coincidem ");
+            return senha_hash;
+        }
+        
+        JOptionPane.showMessageDialog(null, "senha invalida");
+        return null;
+    };
     public String redirecionamento(String id_pessoa){
         Home home = new Home();
         home.setVisible(true);
@@ -205,36 +217,46 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void entrarBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_entrarBtnMouseClicked
-          if(matriculaTxt.getText().equals("") || senhaTxt.getText().equals("")){
+        if(matriculaTxt.getText().equals("") || senhaTxt.getText().equals("")){
             JOptionPane.showMessageDialog(null,"Os campos não podem estar vazios!");
             return;
         }
+        
+       
              
         try{
             Connection con = DataBaseConnection.conexaoBanco();
             String sql = "SELECT a.id_pessoa, a.id_administrador, a.matricula, p.senha FROM administrador a JOIN pessoas p on p.id_pessoa = a.id_pessoa\n" +
-            "WHERE a.matricula = ? AND p.senha = ?;";
+            "WHERE a.matricula = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, matriculaTxt.getText());
-            stmt.setString(2, senhaTxt.getText());
             ResultSet rs = stmt.executeQuery();
 
             if(rs.next()){
+                if(recupera_hash(rs.getString("senha"), senhaTxt.getText()).equals(rs.getString("senha"))){
                 redirecionamento(rs.getString("id_pessoa")); 
                 return;
+                }else{
+                    JOptionPane.showMessageDialog(null, "Senha invalida!");
+                    return;
+                }
             }
-            
+            	
             sql = "SELECT  f.id_funcionario, f.matricula, p.senha FROM funcionario f JOIN pessoas p on p.id_pessoa = f.id_pessoa\n" +
-            "WHERE f.matricula = ? AND p.senha = ?;";
+            "WHERE f.matricula = ?";
             stmt = con.prepareStatement(sql);
             
             stmt.setString(1, matriculaTxt.getText());
-            stmt.setString(2, senhaTxt.getText());
             rs = stmt.executeQuery();
 
             if(rs.next()){
-                redirecionamento("");
+                if(recupera_hash(rs.getString("senha"), senhaTxt.getText()).equals(rs.getString("senha"))){
+                redirecionamento(""); 
                 return;
+                }else{
+                    JOptionPane.showMessageDialog(null, "Senha invalida!");
+                    return;
+                }
             }
             
             JOptionPane.showMessageDialog(null, "Não encontrado!");

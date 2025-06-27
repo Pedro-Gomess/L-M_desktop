@@ -12,15 +12,32 @@ import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.util.regex.Pattern;
+import org.mindrot.jbcrypt.BCrypt;
+
 /**
  *
  * @author Pedro53722376
  */
 public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     String idPessoa;
-    
+    String senha_hash = "";
+    //FUNCAO HASH DE SENHA
+    public static String hash(String senha){
+        String senha_hash = BCrypt.hashpw(senha, BCrypt.gensalt());
+        return senha_hash;
+    };
+   
+    public static String recupera_hash(String senha_hash, String senha_digitada){
+        boolean senhaIscorrect = BCrypt.checkpw(senha_digitada, senha_hash);
+        if(senhaIscorrect){
+            return senha_hash;
+        }
+        
+        JOptionPane.showMessageDialog(null, "senha invalida");
+        return null;
+    };
     //FUNCAO REFRESH
-    
+   
     public void refresh(){
         nomeTxt.setText(null);
         emailTxt.setText(null);
@@ -437,17 +454,17 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             //CADASTRANDO O USUARIO
             sql = "INSERT INTO pessoas(nome, situacao, email, cpf, senha) VALUES(?, 'A', ?, ?, ?)";
             stmt = con.prepareStatement(sql);
-            
+            senha_hash = hash(senhaTxt.getText());
             stmt.setString(1,nomeTxt.getText());
             stmt.setString(2,emailTxt.getText());
             stmt.setString(3,cpfTxt.getText());
-            stmt.setString(4,senhaTxt.getText());
+            stmt.setString(4, senha_hash);
             stmt.execute();
-       
+           
             stmt.close();
             con.close();
         }catch(SQLException ex){
-            JOptionPane.showMessageDialog(null, "Erro na validação de!");
+            JOptionPane.showMessageDialog(null, "Erro na validação!");
         }   
         //INSERT NA TABELA FUNCIONARIO OU ADMINISTRADOR
         try{
@@ -455,7 +472,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             String sql = "INSERT INTO funcionario (matricula, id_pessoa) VALUES('"+funcaoMatricula("FUNC")+"', (SELECT id_pessoa FROM pessoas WHERE email = ? AND senha = ? AND cpf = ?));"; 
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, emailTxt.getText());
-            stmt.setString(2, senhaTxt.getText()); 
+            stmt.setString(2, recupera_hash(senha_hash, senhaTxt.getText())); 
             stmt.setString(3, cpfTxt.getText());
             stmt.execute();
             
@@ -469,7 +486,6 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     //botão refresh 
     private void refreshBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshBtMouseClicked
         refresh();
-        
     }//GEN-LAST:event_refreshBtMouseClicked
 
     private void searchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchMouseClicked
@@ -630,11 +646,8 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             stmt.execute();
             
             JOptionPane.showMessageDialog(null,"Deletado com sucesso");
-            
-            nomeTxt.setText(null);
-            emailTxt.setText(null);
-            cpfTxt.setText(null);
-            senhaTxt.setText(null);
+       
+            refresh();
             
             con.close();
             stmt.close();

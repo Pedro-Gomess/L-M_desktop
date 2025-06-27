@@ -10,12 +10,46 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Pedro53722376
  */
 public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
+    
+    public void refresh(){
+        DefaultTableModel modelo = (DefaultTableModel) tabelaAssinantes.getModel();
+        try {
+            pesquisaTxt.setText("");
+            modelo.setNumRows(0);
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email, a.id_assinante FROM pessoas p  JOIN assinante a ON p.id_pessoa = a.id_pessoa;";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                Object [] dados = {rs.getString("id_assinante"), rs.getString("nome"),"Autor",  rs.getString("pagamento")};
+                modelo.addRow(dados);
+            }
+            
+            sql = "SELECT p.id_pessoa, p.nome, l.pagamento, p.email, l.id_leitor FROM pessoas p  JOIN leitor l ON p.id_pessoa = l.id_pessoa;";
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                Object [] dados = {rs.getString("id_leitor"),rs.getString("nome"),"Leitor",  rs.getString("pagamento")};
+                modelo.addRow(dados);
+            }
+            
+            stmt.close();
+            rs.close();
+            con.close();   
+        } catch (SQLException e) {
+            Logger.getLogger(Tela_lista_assinantes.class.getName()).log(Level.SEVERE, null, e);
+        }
+    };
+    
     
     /**
      * Creates new form Tela_lista_assinantes
@@ -26,21 +60,21 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
         DefaultTableModel modelo = (DefaultTableModel) tabelaAssinantes.getModel();
         try {
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email FROM pessoas p  JOIN assinante a ON p.id_pessoa = a.id_pessoa;";
+            String sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email, a.id_assinante FROM pessoas p  JOIN assinante a ON p.id_pessoa = a.id_pessoa;";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()){
-                Object [] dados = {rs.getString("nome"),"Autor",  rs.getString("pagamento")};
+                Object [] dados = {rs.getString("id_assinante"), rs.getString("nome"),"Autor",  rs.getString("pagamento")};
                 modelo.addRow(dados);
             }
             
-            sql = "SELECT p.id_pessoa, p.nome, o.pagamento, p.email FROM pessoas p  JOIN leitor o ON p.id_pessoa = o.id_pessoa;";
+            sql = "SELECT p.id_pessoa, p.nome, l.pagamento, p.email, l.id_leitor FROM pessoas p  JOIN leitor l ON p.id_pessoa = l.id_pessoa;";
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
             
             while(rs.next()){
-                Object [] dados = {rs.getString("nome"),"Leitor",  rs.getString("pagamento")};
+                Object [] dados = {rs.getString("id_leitor"), rs.getString("nome"),"Leitor",  rs.getString("pagamento")};
                 modelo.addRow(dados);
             }
             
@@ -89,11 +123,11 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Nome", "Tipo", "pagamento"
+                "Assinatura", "Nome", "Tipo", "pagamento"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -160,6 +194,7 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
         jLabel7.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
         jLabel7.setText("Nome:");
 
+        numeroAssinaturaTxt.setEditable(false);
         numeroAssinaturaTxt.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
         numeroAssinaturaTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         numeroAssinaturaTxt.addActionListener(new java.awt.event.ActionListener() {
@@ -184,30 +219,33 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(92, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 86, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(22, 22, 22)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel3))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel2)
-                                .addComponent(jLabel4)))
-                        .addGap(126, 126, 126))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(cancelaBt)
-                        .addGap(62, 62, 62))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(22, 22, 22)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel7)
+                                            .addComponent(jLabel3))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jLabel4)))
+                                .addGap(126, 126, 126))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(cancelaBt)
+                                .addGap(62, 62, 62))))
+                    .addComponent(numeroAssinaturaTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(nomeTxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
-                        .addComponent(emailTxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
-                        .addComponent(numeroAssinaturaTxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE))
+                        .addComponent(emailTxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE))
                     .addContainerGap()))
         );
         jPanel1Layout.setVerticalGroup(
@@ -221,18 +259,18 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
                 .addComponent(jLabel3)
                 .addGap(74, 74, 74)
                 .addComponent(jLabel4)
-                .addGap(85, 85, 85)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(numeroAssinaturaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
                 .addComponent(cancelaBt)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(134, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(262, 262, 262)
                     .addComponent(nomeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(45, 45, 45)
                     .addComponent(emailTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(49, 49, 49)
-                    .addComponent(numeroAssinaturaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(231, Short.MAX_VALUE)))
+                    .addContainerGap(326, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout imagemFundo1Layout = new javax.swing.GroupLayout(imagemFundo1);
@@ -292,35 +330,7 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_pesquisaTxtActionPerformed
 
     private void refreshMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshMouseClicked
-        DefaultTableModel modelo = (DefaultTableModel) tabelaAssinantes.getModel();
-        try {
-            pesquisaTxt.setText("");
-            modelo.setNumRows(0);
-            Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email FROM pessoas p  JOIN assinante a ON p.id_pessoa = a.id_pessoa;";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            
-            while(rs.next()){
-                Object [] dados = {rs.getString("nome"),"Autor",  rs.getString("pagamento")};
-                modelo.addRow(dados);
-            }
-            
-            sql = "SELECT p.id_pessoa, p.nome, l.pagamento, p.email FROM pessoas p  JOIN leitor l ON p.id_pessoa = l.id_pessoa;";
-            stmt = con.prepareStatement(sql);
-            rs = stmt.executeQuery();
-            
-            while(rs.next()){
-                Object [] dados = {rs.getString("nome"),"Leitor",  rs.getString("pagamento")};
-                modelo.addRow(dados);
-            }
-            
-            stmt.close();
-            rs.close();
-            con.close();   
-        } catch (SQLException e) {
-            Logger.getLogger(Tela_lista_assinantes.class.getName()).log(Level.SEVERE, null, e);
-        }
+        refresh();
     }//GEN-LAST:event_refreshMouseClicked
 
     private void searchBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchBtMouseClicked
@@ -329,23 +339,23 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
             DefaultTableModel modelo = (DefaultTableModel) tabelaAssinantes.getModel();
             modelo.setNumRows(0);
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email FROM pessoas p  JOIN assinante a ON p.id_pessoa = a.id_pessoa WHERE p.nome LIKE ?;";
+            String sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email, a.id_assinante FROM pessoas p  JOIN assinante a ON p.id_pessoa = a.id_pessoa;";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, "%"+pesquisaTxt.getText()+"%");
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()){
-                Object [] dados = {rs.getString("nome"), "Autor", rs.getString("pagamento")};
+                Object [] dados = {rs.getString("id_assinante"), rs.getString("nome"),"Autor",  rs.getString("pagamento")};
                 modelo.addRow(dados);
             }
             
-            sql = "SELECT p.id_pessoa, p.nome, l.pagamento, p.email FROM pessoas p  JOIN leitor l ON p.id_pessoa = l.id_pessoa WHERE p.nome LIKE ?;";
+            sql = "SELECT p.id_pessoa, p.nome, l.pagamento, p.email, l.id_leitor FROM pessoas p  JOIN leitor l ON p.id_pessoa = l.id_pessoa;";
             stmt = con.prepareStatement(sql);
             stmt.setString(1, "%"+pesquisaTxt.getText()+"%");
             rs = stmt.executeQuery();
             
             while(rs.next()){
-                Object [] dados = {rs.getString("nome"),"Leitor",  rs.getString("pagamento")};
+                Object [] dados = {rs.getString("id_leitor"), rs.getString("nome"),"Leitor",  rs.getString("pagamento")};
                 modelo.addRow(dados);
             }
             
@@ -372,11 +382,45 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_numeroAssinaturaTxtActionPerformed
 
     private void tabelaAssinantesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaAssinantesMouseClicked
-        
+        numeroAssinaturaTxt.setText(String.valueOf(tabelaAssinantes.getValueAt(tabelaAssinantes.getSelectedRow(), 0)));
+        nomeTxt.setText(String.valueOf(tabelaAssinantes.getValueAt(tabelaAssinantes.getSelectedRow(), 1)));
+        emailTxt.setText(String.valueOf(tabelaAssinantes.getValueAt(tabelaAssinantes.getSelectedRow(), 2)));
+
     }//GEN-LAST:event_tabelaAssinantesMouseClicked
 
     private void cancelaBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelaBtMouseClicked
-         // TODO add your handling code here:
+        try {
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT * FROM assinante WHERE id_assinante = ?;";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, numeroAssinaturaTxt.getText());
+            ResultSet rs = stmt.executeQuery();
+            
+            if(!rs.next()){
+                JOptionPane.showMessageDialog(null, "Não foi possivel localizar o assinante!");      
+                return;
+            }
+            int escolha = JOptionPane.showConfirmDialog(null, "Tem certaza que quer cancelar a assinatura?", "Cancelamento de assinatura", JOptionPane.YES_NO_OPTION);
+            if(escolha == JOptionPane.YES_OPTION){
+                if(!rs.getString("pagamento").equals("Pendente")){ 
+                    JOptionPane.showMessageDialog(null, "Impossivel realizar tarefa!");
+                    return;
+                }
+                JOptionPane.showMessageDialog(null, "Assinatura cancelada com sucesso!");
+                sql = "DELETE FROM assinante WHERE id_assinante = '"+numeroAssinaturaTxt.getText()+"' AND pagamento = 'Pendente';";
+                stmt = con.prepareStatement(sql);
+                stmt.execute();
+                refresh();
+            }else if(escolha == JOptionPane.NO_OPTION){
+                JOptionPane.showMessageDialog(null, "Ação cancelada!");
+            }
+                rs.close();
+                con.close();
+                stmt.close();
+                                   
+        }catch (SQLException e) {
+            Logger.getLogger(Tela_gerenciar_funcionarios.class.getName()).log(Level.SEVERE, null, e);
+        }
     }//GEN-LAST:event_cancelaBtMouseClicked
 
 
