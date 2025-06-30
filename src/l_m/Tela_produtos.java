@@ -27,7 +27,8 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
     public String livroImg;
     public File capaArq = null;
     public File livroArq = null;
-
+    public File descricaoFile = null;
+    public String idLivro = "";
     public Byte getLivroFile() {
         return livroFile;
     }
@@ -76,6 +77,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         
         tituloAdd.setText(null);    
         autorTxt1.setText(null);
+        descricaoTxt.setText(null);    
         categoriaTxt.setText(null);
         caminhoPath.setText(null);
         capaFile.setText(null);
@@ -104,6 +106,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         return false;
     };
     
+    
     public File recuperaLivro(int id, String situacao){
         
         try{
@@ -111,9 +114,9 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                 Connection con = DataBaseConnection.conexaoBanco();
                 String sql;
                 if(situacao.toLowerCase().equals("pendente")){
-                    sql = "SELECT id_livro_enviado, titulo, livro_file, capa_img  FROM livros_enviados WHERE id_livro_enviado = ?;";
+                    sql = "SELECT id_livro_enviado, titulo, livro_file, capa_img, descricao FROM livros_enviados WHERE id_livro_enviado = ?;";
                 }else{
-                    sql = "SELECT id_livro, titulo, livro_file, capa_img  FROM livros WHERE id_livro = ?;";
+                    sql = "SELECT id_livro, titulo, livro_file, capa_img, descricao FROM livros WHERE id_livro = ?;";
                 }
                 PreparedStatement stmt = con.prepareStatement(sql);
                 stmt.setInt(1, id);
@@ -132,6 +135,12 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                     fos = new FileOutputStream(file);
                     fos.write(bytesCapa);
                     fos.close();
+               
+                    byte[] bytesDescricao = rs.getBytes("descricao");
+                    file = new File("C:\\Livros\\descricaoLivro\\" + titulo + ".txt");
+                    fos = new FileOutputStream(file);
+                    fos.write(bytesDescricao);
+                    fos.close();
                 }
                 JOptionPane.showMessageDialog(null, "Download relizado com sucesso!");
                 rs.close();
@@ -147,11 +156,11 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         return null;
     }
     
-    public  boolean livroPDF(File livroPdf, File capaFile){
+    public  boolean livroPDF(File livroPdf, File capaFile, File descricaoFile){
          try {
             
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "INSERT INTO livros(titulo, autor, visualizacao, categoria, livro_file, capa_img, situacao) VALUES(?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO livros(titulo, autor, visualizacao, categoria, livro_file, capa_img, descricao, situacao) VALUES(?,?,?,?,?,?,?,?)";
             PreparedStatement stmt = con.prepareStatement(sql);
             
             try{
@@ -170,13 +179,22 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                 while(offSet < bytesCapa.length && (numRead = is.read(bytesCapa, offSet, bytesCapa.length-offSet)) >= 0){
                     offSet += numRead;
                 }
+                
+                is = new FileInputStream(descricaoFile);
+                byte[] bytesDescricao = new byte[(int)descricaoFile.length()];
+                offSet = 0;
+                numRead = 0;
+                while(offSet < bytesDescricao.length && (numRead = is.read(bytesDescricao, offSet, bytesDescricao.length-offSet)) >= 0){
+                    offSet += numRead;
+                }
                 stmt.setString(1, tituloAdd.getText());                 
                 stmt.setString(2, autorTxt1.getText()); 
                 stmt.setString(3, "0");
                 stmt.setString(4, categoriaTxt.getText());
                 stmt.setBytes(5, bytesLivro);
                 stmt.setBytes(6, bytesCapa);
-                stmt.setString(7, "Ativo");
+                stmt.setBytes(7, bytesDescricao);
+                stmt.setString(8, "Ativo");
                 stmt.execute();
 
                 JOptionPane.showMessageDialog(null, "Livro adicionado com sucesso!");
@@ -257,6 +275,9 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         jLabel8 = new javax.swing.JLabel();
         autorTxt1 = new javax.swing.JTextField();
         dowloadBt = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        descricaoTxt = new javax.swing.JTextField();
+        selecionarDescricao = new javax.swing.JButton();
         refreshBtn = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableLivros = new javax.swing.JTable();
@@ -379,6 +400,25 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             }
         });
 
+        jLabel14.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
+        jLabel14.setText("Selecionar Descrição:");
+
+        descricaoTxt.setEditable(false);
+        descricaoTxt.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        selecionarDescricao.setText("Selecionar");
+        selecionarDescricao.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        selecionarDescricao.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                selecionarDescricaoMouseClicked(evt);
+            }
+        });
+        selecionarDescricao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selecionarDescricaoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -395,46 +435,53 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                             .addGap(16, 16, 16)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(autorTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel7)
+                                        .addGap(98, 98, 98))
+                                    .addComponent(tituloAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(categoriaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(85, 85, 85)
-                                    .addComponent(jLabel13))
+                                    .addGap(113, 113, 113)
+                                    .addComponent(jLabel9))
                                 .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(caminhoPath)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(selecionarArqBt))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(75, 75, 75)
-                                    .addComponent(jLabel12))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(capaFile, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                            .addGap(64, 64, 64)
-                                            .addComponent(addBtn)
-                                            .addGap(36, 36, 36)
-                                            .addComponent(dowloadBt, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(deleteBt)))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(selecionarCapaBt))))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(16, 16, 16)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(autorTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel7)
-                                    .addGap(98, 98, 98))
-                                .addComponent(tituloAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(16, 16, 16)
-                            .addComponent(categoriaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGap(128, 128, 128)
+                                    .addComponent(jLabel8))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGap(75, 75, 75)
+                                                .addComponent(jLabel14)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(descricaoTxt)
+                                                .addGap(6, 6, 6)))
+                                        .addComponent(selecionarDescricao))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(caminhoPath)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(selecionarArqBt))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                        .addGap(75, 75, 75)
+                                        .addComponent(jLabel12))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(capaFile, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGap(64, 64, 64)
+                                                .addComponent(addBtn)
+                                                .addGap(40, 40, 40)
+                                                .addComponent(dowloadBt, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(deleteBt)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(selecionarCapaBt))))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(129, 129, 129)
-                        .addComponent(jLabel9))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(144, 144, 144)
-                        .addComponent(jLabel8)))
+                        .addGap(102, 102, 102)
+                        .addComponent(jLabel13)))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -444,7 +491,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
-                .addGap(44, 44, 44)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tituloAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -456,24 +503,30 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(categoriaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel14)
+                .addGap(12, 12, 12)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(descricaoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(selecionarDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel12)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(caminhoPath, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(selecionarArqBt, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(12, 12, 12)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(selecionarArqBt, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                    .addComponent(caminhoPath))
+                .addGap(2, 2, 2)
                 .addComponent(jLabel13)
-                .addGap(10, 10, 10)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(capaFile, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(selecionarCapaBt, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(selecionarCapaBt, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(capaFile, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(deleteBt)
                     .addComponent(addBtn)
-                    .addComponent(dowloadBt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(107, Short.MAX_VALUE))
+                    .addComponent(dowloadBt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
 
         refreshBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/refresh.png"))); // NOI18N
@@ -523,7 +576,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(imagemFundo1Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 329, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 321, Short.MAX_VALUE)
                 .addGroup(imagemFundo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, imagemFundo1Layout.createSequentialGroup()
                         .addComponent(tituloTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -575,16 +628,21 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
 
     private void searchBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchBtMouseClicked
           try {
+            if(tituloTxt.getText().isBlank()){
+                JOptionPane.showMessageDialog(null, "Barra de pesquisa está vazia!");
+                return;
+            }
+              
             DefaultTableModel modelo = (DefaultTableModel) tableLivros.getModel();
             modelo.setNumRows(0);
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT id_livro, titulo, categoria FROM livros WHERE titulo LIKE ?;";
+            String sql = "SELECT * FROM livros WHERE titulo LIKE ?;";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, "%"+tituloTxt.getText()+"%");
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()){
-                Object[] dados = {rs.getString("id_livro"), rs.getString("titulo"), rs.getString("categoria")};
+                Object[] dados = {rs.getString("id_livro"), rs.getString("titulo"), rs.getString("situacao")};
                 modelo.addRow(dados);
             }
  
@@ -607,12 +665,34 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Nenhum campo pode estar vazio");
             return;
         }
-        if(tableLivros.isRowSelected(tableLivros.getSelectedRow())){
-            String idLivro = String.valueOf(tableLivros.getValueAt(tableLivros.getSelectedRow(), 0));
-            updateSituacao(idLivro);
-        };
-        livroPDF(livroArq.getAbsoluteFile(), capaArq.getAbsoluteFile());
-        refresh(    );
+        
+        try{
+            Connection con = DataBaseConnection.conexaoBanco();
+            String sql = "SELECT id_livro_enviado, titulo, situacao FROM livros_enviados WHERE titulo = ? AND situacao = 'Pendente';";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, tituloAdd.getText());
+            ResultSet rs = stmt.executeQuery();
+            
+            if(!rs.next()){
+                livroPDF(livroArq.getAbsoluteFile(), capaArq.getAbsoluteFile(), descricaoFile.getAbsoluteFile());
+                refresh();
+                return;
+            }
+            
+            if(rs.next()){
+                idLivro = rs.getString("id_livro");
+                updateSituacao(idLivro);
+                livroPDF(livroArq.getAbsoluteFile(), capaArq.getAbsoluteFile(), descricaoFile.getAbsoluteFile());
+                refresh();
+            }
+            
+            rs.close();
+            stmt.close();
+            con.close();
+        }catch(SQLException ex){
+            Logger.getLogger(Tela_produtos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
          
     }//GEN-LAST:event_addBtnMouseClicked
 
@@ -680,11 +760,12 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()){
-               tituloAdd.setText(rs.getString("titulo"));
-               autorTxt1.setText(rs.getString("autor"));
-               categoriaTxt.setText(rs.getString("categoria"));
-               caminhoPath.setText(rs.getString("titulo") + ".pdf");
-               capaFile.setText(rs.getString("titulo") + ".png");
+                tituloAdd.setText(rs.getString("titulo"));
+                autorTxt1.setText(rs.getString("autor"));
+                categoriaTxt.setText(rs.getString("categoria"));
+                descricaoTxt.setText(rs.getString("titulo") + ".txt");
+                caminhoPath.setText(rs.getString("titulo") + ".pdf");
+                capaFile.setText(rs.getString("titulo") + ".png");
             }
             
             sql = "SELECT id_livro_enviado, titulo, autor, categoria, livro_file, capa_img FROM livros_enviados WHERE id_livro_enviado = '"+idLivro+"' AND situacao = '"+situacaoLivro+"';";
@@ -692,11 +773,12 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             rs = stmt.executeQuery();
             
             while(rs.next()){
-               tituloAdd.setText(rs.getString("titulo"));
-               autorTxt1.setText(rs.getString("autor"));
-               categoriaTxt.setText(rs.getString("categoria"));
-               caminhoPath.setText(rs.getString("titulo") + ".pdf");
-               capaFile.setText(rs.getString("titulo") + ".png");
+                tituloAdd.setText(rs.getString("titulo"));
+                autorTxt1.setText(rs.getString("autor"));
+                categoriaTxt.setText(rs.getString("categoria"));
+                descricaoTxt.setText(rs.getString("titulo") + ".txt");
+                caminhoPath.setText(rs.getString("titulo") + ".pdf");
+                capaFile.setText(rs.getString("titulo") + ".png");
             }
             rs.close();
             stmt.close();
@@ -714,6 +796,9 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
         String id =  String.valueOf(tableLivros.getValueAt(tableLivros.getSelectedRow(), 0));
         String situacao = String.valueOf(tableLivros.getValueAt(tableLivros.getSelectedRow(), 2));
         recuperaLivro(Integer.parseInt(id), situacao);
+        descricaoTxt.setText(null);
+        capaFile.setText(null);
+        caminhoPath.setText(null);
     }//GEN-LAST:event_dowloadBtMouseClicked
 
     private void deleteBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteBtMouseClicked
@@ -753,6 +838,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             stmt.execute(); 
             
             JOptionPane.showMessageDialog(null, "Livro excluido com sucesso!");
+            refresh();
             rs.close();
             stmt.close();
             con.close();
@@ -760,6 +846,28 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             Logger.getLogger(Tela_produtos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_deleteBtMouseClicked
+
+    private void selecionarDescricaoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selecionarDescricaoMouseClicked
+           try{
+            JFileChooser fc = new JFileChooser();
+            fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fc.showOpenDialog(this);
+            descricaoFile = fc.getSelectedFile();
+            
+            if(!getExt(descricaoFile.getPath()).equals("txt")){
+                JOptionPane.showMessageDialog(null, "somente arquivos txt");
+                return;
+            }
+            
+            descricaoTxt.setText(descricaoFile.getPath());
+        }catch(NullPointerException ex){
+            JOptionPane.showMessageDialog(null, "Nenhum arquivo selecionado!");
+        }
+    }//GEN-LAST:event_selecionarDescricaoMouseClicked
+
+    private void selecionarDescricaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selecionarDescricaoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_selecionarDescricaoActionPerformed
 
     
     
@@ -770,11 +878,13 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
     private javax.swing.JTextField capaFile;
     private javax.swing.JTextField categoriaTxt;
     private javax.swing.JLabel deleteBt;
+    private javax.swing.JTextField descricaoTxt;
     private javax.swing.JLabel dowloadBt;
     private imagemfundo.ImagemFundo imagemFundo1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -785,6 +895,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
     private javax.swing.JLabel searchBt;
     private javax.swing.JButton selecionarArqBt;
     private javax.swing.JButton selecionarCapaBt;
+    private javax.swing.JButton selecionarDescricao;
     private javax.swing.JTable tableLivros;
     private javax.swing.JTextField tituloAdd;
     private javax.swing.JTextField tituloTxt;

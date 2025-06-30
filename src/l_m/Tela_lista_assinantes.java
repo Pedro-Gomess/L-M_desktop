@@ -33,12 +33,12 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
                 modelo.addRow(dados);
             }
             
-            sql = "SELECT p.id_pessoa, p.nome, l.pagamento, p.email, l.id_leitor FROM pessoas p  JOIN leitor l ON p.id_pessoa = l.id_pessoa;";
+            sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email, a.id_assinante FROM pessoas p  JOIN assinante a ON p.id_pessoa = a.id_pessoa;";
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
             
             while(rs.next()){
-                Object [] dados = {rs.getString("id_leitor"),rs.getString("nome"),"Leitor",  rs.getString("pagamento")};
+                Object [] dados = {rs.getString("id_assinante"),rs.getString("nome"),"Leitor",  rs.getString("pagamento")};
                 modelo.addRow(dados);
             }
             
@@ -69,12 +69,12 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
                 modelo.addRow(dados);
             }
             
-            sql = "SELECT p.id_pessoa, p.nome, l.pagamento, p.email, l.id_leitor FROM pessoas p  JOIN leitor l ON p.id_pessoa = l.id_pessoa;";
+            sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email, a.id_assinante FROM pessoas p  JOIN assinante a ON p.id_pessoa = a.id_pessoa;";
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
             
             while(rs.next()){
-                Object [] dados = {rs.getString("id_leitor"), rs.getString("nome"),"Leitor",  rs.getString("pagamento")};
+                Object [] dados = {rs.getString("id_assinante"), rs.getString("nome"),"Leitor",  rs.getString("pagamento")};
                 modelo.addRow(dados);
             }
             
@@ -339,7 +339,7 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
             DefaultTableModel modelo = (DefaultTableModel) tabelaAssinantes.getModel();
             modelo.setNumRows(0);
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email, a.id_assinante FROM pessoas p  JOIN assinante a ON p.id_pessoa = a.id_pessoa;";
+            String sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email, a.id_assinante FROM pessoas p  JOIN assinante a ON p.id_pessoa = a.id_pessoa WHERE p.nome LIKE ?;";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, "%"+pesquisaTxt.getText()+"%");
             ResultSet rs = stmt.executeQuery();
@@ -349,13 +349,13 @@ public class Tela_lista_assinantes extends javax.swing.JInternalFrame {
                 modelo.addRow(dados);
             }
             
-            sql = "SELECT p.id_pessoa, p.nome, l.pagamento, p.email, l.id_leitor FROM pessoas p  JOIN leitor l ON p.id_pessoa = l.id_pessoa;";
+            sql = "SELECT p.id_pessoa, p.nome, a.pagamento, p.email, a.id_assinante FROM pessoas p  JOIN assinante a ON p.id_pessoa = a.id_pessoa WHERE p.nome LIKE ?;";
             stmt = con.prepareStatement(sql);
             stmt.setString(1, "%"+pesquisaTxt.getText()+"%");
             rs = stmt.executeQuery();
             
             while(rs.next()){
-                Object [] dados = {rs.getString("id_leitor"), rs.getString("nome"),"Leitor",  rs.getString("pagamento")};
+                Object [] dados = {rs.getString("id_assinante"), rs.getString("nome"),"Leitor",  rs.getString("pagamento")};
                 modelo.addRow(dados);
             }
             

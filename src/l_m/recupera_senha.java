@@ -11,12 +11,19 @@ import java.util.logging.Logger;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
 import java.util.regex.Pattern;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
  * @author Pedro53722376
  */
 public class recupera_senha extends javax.swing.JFrame {
+    //FUNCAO HASH DE SENHA
+    public static String hash(String senha){
+        String senha_hash = BCrypt.hashpw(senha, BCrypt.gensalt());
+        return senha_hash;
+    };
+    
     String idPessoa = "";
     //FUNCAO PARA VERIFICAR SE EMAIL E VALIDO
     public static final String EMAIL_REGEX  = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
@@ -252,44 +259,48 @@ public class recupera_senha extends javax.swing.JFrame {
         //VERIFICA SE O FUNCIONARIO EXISTE E ATUALIZA A SENHA
         try{
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "SELECT f.id_pessoa, p.email, p.senha, f.matricula FROM pessoas p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+matriculaTxt.getText()+"' AND email = '"+emailTxt.getText()+"';";
+            String sql = "SELECT f.id_pessoa, p.email, p.senha_hash, f.matricula FROM pessoas p INNER JOIN funcionario f ON p.id_pessoa = f.id_pessoa WHERE matricula = '"+matriculaTxt.getText()+"' AND email = '"+emailTxt.getText()+"';";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             if(rs.next()){
                 idPessoa = rs.getString("id_pessoa");
-                sql =  "UPDATE pessoas SET senha = ? WHERE id_pessoa = ?";
+                sql =  "UPDATE pessoas SET senha_hash = ? WHERE id_pessoa = ?";
                 stmt = con.prepareStatement(sql);
-                stmt.setString(1, senhaTxt.getText());
+                stmt.setString(1, hash(senhaTxt.getText()));
                 stmt.setString(2, idPessoa);
                 stmt.execute();
-                JOptionPane.showMessageDialog(null, "Senha atualizada com scesso");
+                JOptionPane.showMessageDialog(null, "Senha atualizada com sucesso!");
 
                 con.close();
                 stmt.close();
                 rs.close();
-
+                matriculaTxt.setText(null);
+                emailTxt.setText(null);
+                senhaTxt.setText(null);
                 return;
             }
 
             //VERIFICA SE O ADMINISTRADOR EXISTE E ATUALIZA A SENHA
-            sql = "SELECT a.id_pessoa, p.email, p.senha, a.matricula FROM pessoas p INNER JOIN administrador a ON p.id_pessoa = a.id_pessoa WHERE matricula = '"+matriculaTxt.getText()+"' AND email = '"+emailTxt.getText()+"';";
+            sql = "SELECT a.id_pessoa, p.email, p.senha_hash, a.matricula FROM pessoas p INNER JOIN administrador a ON p.id_pessoa = a.id_pessoa WHERE matricula = '"+matriculaTxt.getText()+"' AND email = '"+emailTxt.getText()+"';";
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
 
             if(rs.next()){
                 idPessoa = rs.getString("id_pessoa");
-                sql =  "UPDATE pessoas SET senha = ? WHERE id_pessoa = ?";
+                sql =  "UPDATE pessoas SET senha_hash = ? WHERE id_pessoa = ?";
                 stmt = con.prepareStatement(sql);
                 stmt.setString(1, senhaTxt.getText());
                 stmt.setString(2, idPessoa);
                 stmt.execute();
-                JOptionPane.showMessageDialog(null, "Senha atualizada com scesso");
+                JOptionPane.showMessageDialog(null, "Senha atualizada com sucesso!");
 
                 con.close();
                 stmt.close();
                 rs.close();
-
+                matriculaTxt.setText(null);
+                emailTxt.setText(null);
+                senhaTxt.setText(null);
                 return;
             }
 

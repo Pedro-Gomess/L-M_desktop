@@ -452,7 +452,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
             }
             
             //CADASTRANDO O USUARIO
-            sql = "INSERT INTO pessoas(nome, situacao, email, cpf, senha) VALUES(?, 'A', ?, ?, ?)";
+            sql = "INSERT INTO pessoas(nome, situacao, email, cpf, senha_hash) VALUES(?, 'A', ?, ?, ?)";
             stmt = con.prepareStatement(sql);
             senha_hash = hash(senhaTxt.getText());
             stmt.setString(1,nomeTxt.getText());
@@ -469,7 +469,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
         //INSERT NA TABELA FUNCIONARIO OU ADMINISTRADOR
         try{
             Connection con = DataBaseConnection.conexaoBanco();
-            String sql = "INSERT INTO funcionario (matricula, id_pessoa) VALUES('"+funcaoMatricula("FUNC")+"', (SELECT id_pessoa FROM pessoas WHERE email = ? AND senha = ? AND cpf = ?));"; 
+            String sql = "INSERT INTO funcionario (matricula, id_pessoa) VALUES('"+funcaoMatricula("FUNC")+"', (SELECT id_pessoa FROM pessoas WHERE email = ? AND senha_hash = ? AND cpf = ?));"; 
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, emailTxt.getText());
             stmt.setString(2, recupera_hash(senha_hash, senhaTxt.getText())); 
@@ -491,7 +491,7 @@ public class Tela_gerenciar_funcionarios extends javax.swing.JInternalFrame {
     private void searchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchMouseClicked
         DefaultTableModel modelo = (DefaultTableModel) tabelaFunc.getModel();
         if(pesquisaTxt.getText().isBlank()){
-            JOptionPane.showMessageDialog(null, "Barra de pesquisa está vazi)");
+            JOptionPane.showMessageDialog(null, "Barra de pesquisa está vazia!");
             return;
         }
         try {
