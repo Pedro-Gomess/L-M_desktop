@@ -131,7 +131,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                     fos.write(bytesLivro);
 
                     byte[] bytesCapa = rs.getBytes("capa_img");
-                    file = new File("C:\\Livros\\capaLivro\\" + titulo + ".png");
+                    file = new File("C:\\Livros\\capaLivro\\" + titulo + ".jpeg");
                     fos = new FileOutputStream(file);
                     fos.write(bytesCapa);
                     fos.close();
@@ -729,8 +729,8 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
             fc.showOpenDialog(this);
             File f = fc.getSelectedFile();
             capaArq = fc.getSelectedFile();
-            if(!getExt(f.getPath()).equals("png") && !getExt(f.getPath()).equals("jpg")){
-                JOptionPane.showMessageDialog(null, "somente arquivos png ou jpg!");
+            if(!getExt(f.getPath()).equals("jpeg") && !getExt(f.getPath()).equals("jpeg")){
+                JOptionPane.showMessageDialog(null, "somente arquivos jpeg!");
                 return;
             }
             
@@ -765,7 +765,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                 categoriaTxt.setText(rs.getString("categoria"));
                 descricaoTxt.setText(rs.getString("titulo") + ".txt");
                 caminhoPath.setText(rs.getString("titulo") + ".pdf");
-                capaFile.setText(rs.getString("titulo") + ".png");
+                capaFile.setText(rs.getString("titulo") + ".jpeg");
             }
             
             sql = "SELECT id_livro_enviado, titulo, autor, categoria, livro_file, capa_img FROM livros_enviados WHERE id_livro_enviado = '"+idLivro+"' AND situacao = '"+situacaoLivro+"';";
@@ -778,7 +778,7 @@ public class Tela_produtos extends javax.swing.JInternalFrame {
                 categoriaTxt.setText(rs.getString("categoria"));
                 descricaoTxt.setText(rs.getString("titulo") + ".txt");
                 caminhoPath.setText(rs.getString("titulo") + ".pdf");
-                capaFile.setText(rs.getString("titulo") + ".png");
+                capaFile.setText(rs.getString("titulo") + ".jpeg");
             }
             rs.close();
             stmt.close();
